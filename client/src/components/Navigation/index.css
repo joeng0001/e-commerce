@@ -2,11 +2,11 @@
     position:fixed;
     margin-top: 80px;
     width:100%;
-    background-color:aqua;
+    background-image: linear-gradient(to right, rgb(114, 189, 172), rgb(75, 186, 194));
     text-align: center;
     height:40px;
     align-items: center;
-    z-index: 1;/*avoid element display throught*/
+    z-index: 2;/*avoid element display throught*/
 }
 
 
@@ -15,4 +15,5 @@
     padding:5px;
     text-decoration: none;
     margin-right:10px;
+    font-size:25px;
 }

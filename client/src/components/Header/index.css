@@ -6,11 +6,11 @@
     gap:10%;
     width:100%;
     height: 40px;
-    background-color: aqua;
+    background-image: linear-gradient(to right, rgb(114, 189, 172), rgb(75, 186, 194));
     text-align:center;
     justify-content:right;
     align-items: center;
-    z-index:1;/*avoid element display throught*/
+    z-index:2;/*avoid element display throught*/
 }
 
 .Header_wrapper:hover{
@@ -30,8 +30,7 @@
 
 .Header_link:hover{
     animation: Header_change 2s infinite;
-    transition: font-size 0.5s ease;
-    transition-timing-function: linear;
+    transition: font-size 0.5s linear;
     font-size: 20px;
 }
 

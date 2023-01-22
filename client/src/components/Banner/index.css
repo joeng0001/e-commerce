@@ -1,12 +1,12 @@
 
 .Banner_wrapper{
-    background-image: linear-gradient(to left,lightblue, lightgreen);
+    background-image: linear-gradient(to left,rgb(142, 203, 214),rgb(202, 237, 241));
     overflow: hidden;/*hide the banner if overflow*/
     position:fixed;
     top:40px;/*height of header is 40px*/
     width:100%;
     height:40px;
-    z-index: 1;/*avoid element display throught*/
+    z-index: 2;/*avoid element display throught*/
 }
 .Banner_banner{
     color:red;
@@ -16,7 +16,6 @@
 }
 
 .Banner_content{
-    border: 2px dotted lightskyblue;
     font-size: 20px;
     font-family:Arial, Helvetica, sans-serif;
 }

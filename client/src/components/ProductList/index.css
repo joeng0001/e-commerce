@@ -1,5 +1,5 @@
 .ProductList_wrapper{
-    width:100%;
+    width:98%;/*if 100%,HomePageProductList will shift*/
     height:100%;
     margin:10px;
 }
@@ -12,21 +12,22 @@
  .ProductList_tableless {
     display:flex;
     flex-wrap: wrap;
-    gap:30px;
+    gap:40px;
 } 
 .ProductList_card {
     min-width: 300px;
     min-height: 200px;
     border: 1px black solid;
     box-shadow: 5px 5px 20px 1px rgba(0, 0, 0, 0.5) !important;/*overwrite the default card setting*/
+    margin-bottom:10px;/* for haomepageproductlist*/
 }
 .ProductList_card:hover {
     box-shadow: 5px 5px 20px 1px rgba(132, 196, 226, 0.5) !important;
-    cursor: pointer;
 }
 
 .ProductList_image{
     width:280px;
-    height:150px;
+    height:200px; 
     margin:10px;
+    object-fit: cover;
 }

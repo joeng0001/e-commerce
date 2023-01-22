@@ -80,9 +80,9 @@ export default function AlertDialogSlide(props) {
               </div>
               <br/>
               <div className="ProductDetail_counter">
-                <button className="ProductDetail_counterButton" onClick={minusOneCount}>-</button>
+                <button className="ProductDetail_counterButton" onClick={minusOneCount} disabled={product_cnt<=1}>-</button>
                   <span className="ProductDetail_counterValue">{product_cnt}</span>
-                <button className="ProductDetail_counterButton"onClick={addOneCount}>+</button>
+                <button className="ProductDetail_counterButton"onClick={addOneCount} disabled={product_cnt>=99}>+</button>
                 
               </div>
               

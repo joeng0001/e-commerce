@@ -40,7 +40,8 @@
 .ProductDetail_uiCartBtn:hover {
     border-color: rgb(46, 117, 46);
     background:rgb(196, 245, 196);
-    animation: jump 1s ease;
+    transform: translateY(-10px);
+    transition: transform 0.5s ease;
 }
 
 .ProductDetail_uiBackBtn {
@@ -53,12 +54,8 @@
     
 }
 
-@keyframes jump {
-   from {
-    transform: translateY(-10px);
-   }
-
-   to{
-    transform: translateY(0);
-   }
+.ProductDetail_alertMsg{
+    margin-left:10px;
+    font-size:15px;
+    color:red;
 }

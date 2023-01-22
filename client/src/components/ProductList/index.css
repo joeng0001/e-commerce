@@ -1,0 +1,32 @@
+.ProductList_wrapper{
+    width:100%;
+    height:100%;
+    margin:10px;
+}
+/* .ProductList_grid { tableless design in grid system
+    display: grid;
+    grid-template-columns: calc(100%/4) calc(100%/4) calc(100%/4) ;
+    grid-auto-rows: 200px;
+    gap:calc(25%/4);
+} */
+ .ProductList_tableless {
+    display:flex;
+    flex-wrap: wrap;
+    gap:30px;
+} 
+.ProductList_card {
+    min-width: 300px;
+    min-height: 200px;
+    border: 1px black solid;
+    box-shadow: 5px 5px 20px 1px rgba(0, 0, 0, 0.5) !important;/*overwrite the default card setting*/
+}
+.ProductList_card:hover {
+    box-shadow: 5px 5px 20px 1px rgba(132, 196, 226, 0.5) !important;
+    cursor: pointer;
+}
+
+.ProductList_image{
+    width:280px;
+    height:150px;
+    margin:10px;
+}

@@ -1,0 +1,12 @@
+.Footer_wrapper{
+    position:fixed;
+    bottom:0px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: grey;
+}
+
+#copyRight{
+    font-size: 20px;
+}

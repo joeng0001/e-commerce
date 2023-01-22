@@ -1,0 +1,18 @@
+.Navigation_wrapper{
+    position:fixed;
+    margin-top: 80px;
+    width:100%;
+    background-color:aqua;
+    text-align: center;
+    height:40px;
+    align-items: center;
+    z-index: 1;/*avoid element display throught*/
+}
+
+
+.Navigation_link{
+    border-radius:10%;
+    padding:5px;
+    text-decoration: none;
+    margin-right:10px;
+}

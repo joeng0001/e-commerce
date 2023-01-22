@@ -1,0 +1,61 @@
+
+
+.Header_wrapper{
+    position:fixed;
+    display:flex;
+    gap:10%;
+    width:100%;
+    height: 40px;
+    background-color: aqua;
+    text-align:center;
+    justify-content:right;
+    align-items: center;
+    z-index:1;/*avoid element display throught*/
+}
+
+.Header_wrapper:hover{
+    transition: all 0.5s ease;
+    transition-timing-function: linear;
+    background-color: linear-gradient(0,191,255 );
+}
+
+.Header_link{
+    border:1px solid black;
+    /* background-color: rgb(153,153,255); */
+    background-color: transparent;
+    border-radius:15%;
+    padding:5px;
+    text-decoration:none;
+}
+
+.Header_link:hover{
+    animation: Header_change 2s infinite;
+    transition: font-size 0.5s ease;
+    transition-timing-function: linear;
+    font-size: 20px;
+}
+
+@keyframes Header_change {
+    0% {
+        background-color: cyan;
+    }
+
+    25% {
+        background-color: rgb(135,206,235);
+    }
+    50%{
+        background-color: rgb(127,255,212);
+    }
+    75% {
+        background-color: rgb(175,238,238);
+    }
+
+
+
+}
+
+#home{
+    /*overwrite special for home icon*/
+    position:absolute;
+    left:20px;
+}

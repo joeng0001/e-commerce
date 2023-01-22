@@ -1,0 +1,34 @@
+.list_item {
+    border: 5px solid black;
+    margin: 15px;
+    height: 360px;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    /*hide scrollbar for IE*/
+    scrollbar-width: none;
+    /*hide scrollbar for firefox */
+    box-shadow: 3px 5px 10px 1px rgba(0, 0, 0, 0.8) !important;
+}
+
+.list_item::-webkit-scrollbar {
+    /*hide the scroll bar*/
+    display: none;
+    /* for apple safari/google chrome */
+}
+
+.list_tabs{
+    position:sticky;
+    top: 0;
+    background-image:linear-gradient(to right,rgb(101, 171, 180),rgb(70, 111, 199));
+    font-size:100px
+}
+
+.list_tab{
+    font-size:20px;
+    font-display: bloo;
+    margin:5px;
+    padding-right:50px;
+}
+
+
+

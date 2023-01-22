@@ -1,0 +1,21 @@
+.Home_wrapper{
+    padding-top:160px;
+    padding-bottom: 160px;
+}
+.Home_imageWrapper{
+    text-align: center;
+}
+.Home_welcomeMsg{
+    width:90%;
+    opacity: 0.2;
+    height:50%;
+}
+ .list_container { 
+    display:table;
+    height: 800px;
+    border:5px solid red;
+    width:95%;
+    margin:30px;
+    
+} 
+

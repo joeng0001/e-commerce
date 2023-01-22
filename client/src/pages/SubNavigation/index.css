@@ -1,0 +1,53 @@
+.SubNavigation_wrapper{
+    /*enable display productlist in right side*/
+    display:flex;
+    border:1px  black solid;
+    padding-top: 150px;
+}
+
+.SubNavigation_Container{
+    position:relative;
+    border :1px skyblue solid;
+    width:250px;
+    max-height: 300px;
+    margin:50px 100px 50px 50px;
+    box-shadow:0 10px 20px rgba(0, 0, 0, 0.5); 
+    border-radius:10%;
+    text-align: center;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    overflow-y: scroll;
+    -ms-overflow-style: none;/*hide scrollbar for IE*/
+    scrollbar-width: none;/*hide scrollbar for firefox */
+    margin:100px 100px 20px 100px;
+}
+.SubNavigation_Container::-webkit-scrollbar {/*hide the scroll bar*/
+    display: none;/* for apple safari/google chrome */
+}
+.SubNavigation_Container:hover {
+    box-shadow: 5px 10px 20px rgba(132, 196, 226, 0.7);
+}
+.SubNavigation_element {
+    margin:50px;
+}
+.SubNavigation_link {
+    text-decoration: none;
+}
+/* .SubNavigation_ScrollDown{
+    position:sticky;
+    bottom:0px;
+} */
+.SubNavigation_scrollDownText{
+    font-family: Verdana,Geneva,Tahoma,sans-serif;
+    color:coral;
+    cursor: pointer;
+
+}
+.SubNavigation_leftbar{
+    display:flex;
+    flex-direction: column;
+    margin-bottom: 50px;
+    text-align:center;
+    /* justify-content: center;that will move the left bar into middle of component */
+}

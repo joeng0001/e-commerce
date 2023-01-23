@@ -1,5 +1,6 @@
 import Home from '../pages/Home'
 import SubNavigation from '../pages/SubNavigation'
+// eslint-disable-next-line
 export default [
     {
         path:'/',

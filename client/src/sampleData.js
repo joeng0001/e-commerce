@@ -48,7 +48,8 @@ export const productList=
         new:[
             {id:1,name:'a_new_others',price:40},
             {id:2,name:'b_new_others',price:40},
-            {id:3,name:'c_new_others',price:49}
+            {id:3,name:'c_new_others',price:49},
+            {id:4,name:'d_new_others',price:50}
             ],
         chopper:[
             {id:1,name:'a_chopper',price:40},
@@ -63,6 +64,8 @@ export const productList=
             {id:10,name:'j_chopper',price:40},
             {id:11,name:'k_chopper',price:40},
             {id:12,name:'l_chopper',price:40},
+            {id:13,name:'m_chopper',price:40},
+            {id:14,name:'n_chopper',price:40},
           ],
          earsphone:[
             {id:1,name:'a_earsphone',price:40},

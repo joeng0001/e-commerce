@@ -1,8 +1,6 @@
 import './App.css';
 import Header from './components/Header'
-import Banner from './components/Banner'
 import Footer from './components/Footer'
-import Navigation from './components/Navigation'
 import {
   useRoutes
 } from "react-router-dom";
@@ -13,10 +11,9 @@ import routes from './route'
   return (
     <div>
       <Header />
-      <Banner/>
-      <Navigation/>
-        {route}
-      
+        <div className="content_wrapper">
+          {route}  
+        </div>
       <Footer/>
     </div>    
   );

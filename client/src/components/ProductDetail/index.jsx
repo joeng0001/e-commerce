@@ -67,7 +67,7 @@ export default function AlertDialogSlide(props) {
           <DialogContent className="ProductDetail_centent">
             <img
               className="ProductDetail_img"
-              src={`../../../productPhoto/${props.type}/${props.name}.jpg`}
+              src={`../../../productPhoto/${props.type}/${props.subType}/${props.name}.jpg`}
               alt="match not found"  
             />
             <DialogContentText >

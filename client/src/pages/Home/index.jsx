@@ -15,7 +15,7 @@ function Home() {
         <img
           src='../../../home_img.jpg'
           alt="match not found"  
-          className="Home_welcomeMsg"
+          className="Home_image"
         /> 
         </div>
         <br/>

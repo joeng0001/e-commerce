@@ -1,8 +1,7 @@
 .Footer_wrapper{ 
-    min-width: 1300px; /*at least 3 card in homepageProductlist display will take approximate 1200px*/
-    bottom:0px;
     text-align: center;
     background-color: grey;
+    width:100%;
 }
 
 #copyRight{

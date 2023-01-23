@@ -1,33 +1,27 @@
 .Home_wrapper{
-    padding-top:140px;
-    padding-bottom: 160px;
-    min-width:1300px; /*at least 3 card in homepageProductlist display will take approximate 1200px*/
+    width:100%;/*occupy full screen,but element only take 90% in middle*/
 }
 .Home_imageWrapper{
     text-align: center;
 }
-.Home_welcomeMsg{
-    width:95%;
+.Home_image{
+    width:90%;
     opacity: 0.9;
-    height:50%;
-    margin-top:0px;
+    box-shadow: 5px 5px 20px 1px rgba(0, 0, 0, 0.5) ;
 }
  .Home_listContainer { 
-    display:table;
-    height: 800px;
-    width:97%;
-    margin:20px 20px 0px 20px;   
+    width:90%;
 } 
 
 .Home_linkWrapper {
     text-align: right;
+    margin-right:10%;/*leave 10% to right,100% is screen width*/
+    margin-bottom:5%;
 }
 
 .Home_viewMore{
     font-size:30px;
     border-radius:10%;
-    margin-top:0px;
-    margin-right:30px;
     color:blueviolet;
     border-color: blueviolet;
 }

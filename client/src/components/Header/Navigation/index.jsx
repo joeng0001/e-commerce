@@ -6,6 +6,7 @@ export default class Navigation extends Component {
   scrollToTop=()=>{
     window.scrollTo(0, 0)
   }
+  
   render(){
       return (
           <div className="Navigation_wrapper">

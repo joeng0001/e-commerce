@@ -18,6 +18,7 @@ export default function SubNavigation() {//use functional component for using us
     if(prev_type!==type){ 
         setsubType("new");
         setShowMoreMsg(navlist[type]?.length>4)
+        setlistToDisplay(prolist[type]["new"]?.slice(0,12))/*prompt productList change*/
     }
     prev_type=type
     let myref=React.createRef()

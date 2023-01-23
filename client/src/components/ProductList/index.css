@@ -12,11 +12,11 @@
     display:flex;
     flex-wrap: wrap;
     gap:2%;/* leave small gap between each card*/
-    margin:1%;/*left some margin of the component -> ainly for home page list display*/
+    margin:1%;/*left some margin of the component -> mainly for home page list display*/
 } 
 .ProductList_card {
-    max-width: 300px;
-    max-height: 350px;
+    width: 300px;
+    height: 370px;
     border: 1px black solid;
     box-shadow: 5px 5px 20px 1px rgba(0, 0, 0, 0.5) !important;/*overwrite the default card setting*/
     margin-bottom:10px;/* for haomepageproductlist*/
@@ -29,4 +29,29 @@
     width:250px;
     height:200px; 
     margin:10px;
+    margin-bottom:0px;
+}
+
+.ProductList_card_itemName{
+    text-decoration: underline;
+    font-size:25px;
+    font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.ProductList_card_itemComeFrom{
+    font-size:8px;
+    opacity:0.7;
+}
+.ProductList_card_itemPrice{
+    color: rgb(25, 177, 177);
+    font-size:25px;
+    font-weight: bold;
+}
+.ProductList_card_itemPrevPrice{
+    color:black;
+    opacity:0.5;
+    font-size:15px;
+    font-family:fantasy;
+    text-decoration: line-through;
 }

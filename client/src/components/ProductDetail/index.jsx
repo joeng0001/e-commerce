@@ -5,8 +5,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import {AiOutlineStar,AiFillStar,AiOutlineShoppingCart} from 'react-icons/ai'
-import {BsFillCartCheckFill} from 'react-icons/bs'
+import {AiOutlineStar,AiFillStar,AiOutlineShoppingCart,AiOutlineCar} from 'react-icons/ai'
+import {BsFillCartCheckFill,BsCalendar3} from 'react-icons/bs'
 import './index.css'
 
 
@@ -30,6 +30,7 @@ export default function AlertDialogSlide(props) {
   }
   const addToCart=()=>{
     setinCart(!inCart)
+    setproduct_cnt(1);
   }
   const addOneCount=()=>{
     setproduct_cnt(product_cnt+1);
@@ -47,23 +48,33 @@ export default function AlertDialogSlide(props) {
         inFavour?(
             <Button variant="outlined" onClick={addToFavour} size="median" color="secondary">
               <AiFillStar size={28}/>
-              In favour
             </Button>
         ):(
           <Button variant="outlined" onClick={addToFavour} size="median" color="secondary">
             <AiOutlineStar size={28}/>
-            Add favour
           </Button>
         )
       }
-
+      &nbsp;&nbsp;&nbsp;
+      { 
+        inCart?(
+            <Button variant="outlined" onClick={addToCart} size="median" color="success" >
+              <BsFillCartCheckFill size={28}/>
+            </Button>
+        ):(
+          <Button variant="outlined" onClick={addToCart} size="median" color="secondary" >
+            <AiOutlineShoppingCart size={28}/>
+          </Button>
+        )
+      }
         <Dialog
           open={open}
           onClose={handleClose}
-          aria-describedby="alert-dialog-slide-description"
           maxWidth='lg'
+          fullWidth={true}
+          scroll="body"
         >
-          <DialogTitle>{props.name}</DialogTitle>
+          <DialogTitle ><div className="ProductDetail_dialogTitle">{props.name}</div></DialogTitle>
           <DialogContent className="ProductDetail_centent">
             <img
               className="ProductDetail_img"
@@ -71,8 +82,10 @@ export default function AlertDialogSlide(props) {
               alt="match not found"  
             />
             <DialogContentText >
-              this is showing detail of product
               <br/>
+               <div className="ProductDetail_prevPrice">
+                  ${props.prevPrice} 
+              </div>
               <div className="ProductDetail_priceLabel">Price	&nbsp;
                 <span className="ProductDetail_priceNo">
                   ${props.price} Now!
@@ -83,15 +96,42 @@ export default function AlertDialogSlide(props) {
                 <button className="ProductDetail_counterButton" onClick={minusOneCount} disabled={product_cnt<=1}>-</button>
                   <span className="ProductDetail_counterValue">{product_cnt}</span>
                 <button className="ProductDetail_counterButton"onClick={addOneCount} disabled={product_cnt>=99}>+</button>
-                
+                 <span className="ProductDetail_InCartMsg">
+                    <span className="ProductDetail_InCartCnt">X</span> item already in your cart
+                </span>
               </div>
-              
+              <br/>
+             <div className="ProductDetail_descriptionContainer">
+                <div className="ProductDetail_description">
+                  {props.description}
+                </div> 
+              </div>
+              <br/>
+              <div>
+                <AiOutlineCar size={28}/> Shipping now has 10% off!
+              </div> 
+               <div >
+                <BsCalendar3 size={28}/> arrived in 7 days Promise
+              </div> 
+              <div>To Be Added </div>
             </DialogContentText>
             
           </DialogContent>
           <DialogActions>
             <Button  onClick={handleClose} className="ProductDetail_uiBackBtn">Back</Button>
-            
+             { 
+              inFavour?(
+                  <Button variant="outlined" onClick={addToFavour} size="large" color="secondary">
+                    <AiFillStar size={28}/>
+                    In Favour
+                  </Button>
+              ):(
+                <Button variant="outlined" onClick={addToFavour} size="large" color="secondary">
+                  <AiOutlineStar size={28}/>
+                  Add To Favour
+                </Button>
+              )
+            }
             { 
               inCart?(
                   <Button variant="outlined" onClick={addToCart} size="large" color="success" className="ProductDetail_uiCartBtn">
@@ -104,7 +144,7 @@ export default function AlertDialogSlide(props) {
                   Add to Cart
                 </Button>
               )
-          }
+            }
           </DialogActions>
         </Dialog>
       

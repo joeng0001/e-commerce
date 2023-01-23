@@ -14,7 +14,6 @@ export default class ProductList extends Component {
   //in productList page,should perform paging
   render(){
     const {type,subType,list}=this.props;
-    console.log("in product list,receive list",list)
      return(
         
         <div className="ProductList_wrapper">
@@ -30,11 +29,18 @@ export default class ProductList extends Component {
                     />
                     <CardContent>
                       <div>
-                        this is content
+                          <span className="ProductList_card_itemName">
+                            {obj.name } 
+                          </span>
+                          &nbsp;&nbsp;&nbsp;
+                          <span className="ProductList_card_itemComeFrom">
+                            {obj.comeFrom}
+                          </span>
                       </div>
-                      <div>
-                         {obj.name} {obj.price}
+                      <div className="ProductList_card_itemPrice">
+                        ${obj.price} Now! <span className="ProductList_card_itemPrevPrice">${obj.prevPrice}</span>
                       </div>
+                      
                     </CardContent>
                     <CardActions>
                         <ProductDetail {...obj} type={type} subType={subType}/>{/*display a button to open a dialog*/}

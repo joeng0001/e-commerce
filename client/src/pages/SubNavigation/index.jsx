@@ -17,6 +17,7 @@ export default function SubNavigation() {//use functional component for using us
     const [listToDisplay,setlistToDisplay]=useState(prolist[type][subType]?.slice(0,12));
     if(prev_type!==type){ 
         setsubType("new");
+        setShowMoreMsg(navlist[type]?.length>4)
     }
     prev_type=type
     let myref=React.createRef()

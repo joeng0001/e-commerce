@@ -3,6 +3,10 @@
     width:650px;
     height:500px;
 }
+.ProductDetail_dialogTitle{
+    font-size:30px;
+}
+
 
 .ProductDetail_centent{
     display:flex;
@@ -54,8 +58,29 @@
     
 }
 
-.ProductDetail_alertMsg{
-    margin-left:10px;
-    font-size:15px;
-    color:red;
+
+
+.ProductDetail_prevPrice{
+    text-decoration: line-through;
+    opacity:0.5;
+    font-size:20px;
+}
+
+.ProductDetail_InCartMsg{
+    margin-left:20px;/*leave some space between the msg and add button*/
+}
+.ProductDetail_InCartCnt{
+    font-size:25px;
+    color:indigo;
+    font-weight: bold;
+}
+.ProductDetail_descriptionContainer{
+    width:480px;
+    height:120px;
+    overflow-y: scroll;
+}
+.ProductDetail_description{
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
 }

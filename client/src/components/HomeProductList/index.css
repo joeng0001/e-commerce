@@ -1,6 +1,6 @@
 .Home_listItem {
     margin:5%;/*the container take 90%,left,right left 5%*/
-    height: 440px; /*fix height,with card and tab height calculated*/
+    height: 460px; /*fix height,with card and tab height calculated*/
     overflow-y: scroll;/*scroll down ofr y,no scroll for x as display being wrap in list component*/
     -ms-overflow-style: none;
     scrollbar-width: none;

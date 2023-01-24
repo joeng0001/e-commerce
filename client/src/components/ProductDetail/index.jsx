@@ -10,7 +10,7 @@ import {BsFillCartCheckFill,BsCalendar3} from 'react-icons/bs'
 import './index.css'
 
 
-export default function AlertDialogSlide(props) {
+export default function ProductDetail(props) {
   const [open, setOpen] = React.useState(false);
   const [inFavour, setinFavour] = React.useState(false);
   const [inCart, setinCart] = React.useState(false);
@@ -83,8 +83,15 @@ export default function AlertDialogSlide(props) {
             />
             <DialogContentText >
               <br/>
-               <div className="ProductDetail_prevPrice">
-                  ${props.prevPrice} 
+               <div>
+               <span className="ProductDetail_prevPrice">${props.prevPrice} </span> 
+               <span className={
+                props.inventory>100?"ProductDetail_moreThan100"
+                :props.inventory<3?"ProductDetail_lessThan3"
+                :"ProductDetail_between3To100"}>
+                  {props.inventory<3?<span>Only <span className="ProductDetail_inventoryHighlight">{props.inventory}</span> left!</span>
+                  :<span >Current Stock: {props.inventory}</span>}
+                </span>
               </div>
               <div className="ProductDetail_priceLabel">Price	&nbsp;
                 <span className="ProductDetail_priceNo">

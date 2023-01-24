@@ -58,14 +58,31 @@
     
 }
 
-
-
 .ProductDetail_prevPrice{
     text-decoration: line-through;
     opacity:0.5;
     font-size:20px;
 }
 
+.ProductDetail_moreThan100{
+    color:green;
+    font-size:15px;
+    margin-left:60px;
+}
+.ProductDetail_lessThan3 {
+    color: red;
+    font-size: 30px;
+    margin-left: 60px;
+}
+.ProductDetail_between3To100 {
+    color: orange;
+    font-size:25px;
+    margin-left: 60px;
+}
+.ProductDetail_inventoryHighlight{
+    text-decoration: underline;
+    font-size:35px;
+}
 .ProductDetail_InCartMsg{
     margin-left:20px;/*leave some space between the msg and add button*/
 }

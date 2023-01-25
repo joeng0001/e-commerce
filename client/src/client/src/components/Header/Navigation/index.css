@@ -1,0 +1,15 @@
+.Navigation_wrapper{
+    width:100%;
+    background-image: linear-gradient(to right, rgb(114, 189, 172), rgb(75, 186, 194));
+    text-align: center;
+    height:40px;
+    /* z-index: 9;avoid element display throught */
+}
+
+
+.Navigation_link{
+    padding:5px;
+    text-decoration: none;/*remove the underine of default setting*/
+    margin-right:10px;
+    font-size:25px;
+}

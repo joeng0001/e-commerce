@@ -1,0 +1,40 @@
+.Home_wrapper{
+    width:100%;/*occupy full screen,but element only take 90% in middle*/
+}
+.Home_imageWrapper{
+    text-align: center;
+}
+.Home_image{
+    width:90%;
+    opacity: 0.9;
+    box-shadow: 5px 5px 20px 1px rgba(0, 0, 0, 0.5) ;
+}
+ .Home_listContainer { 
+    width:90%;
+} 
+
+.Home_linkWrapper {
+    text-align: right;
+    margin-right:10%;/*leave 10% to right,100% is screen width*/
+    margin-bottom:5%;
+}
+
+.Home_viewMore{
+    font-size:30px;
+    border-radius:10%;
+    color:blueviolet;
+    border-color: blueviolet;
+}
+
+.Home_viewMore:hover {
+    color: green;
+    border-color: blueviolet;
+    cursor:pointer;
+    transform: translateY(-5px);
+    transition: transform 0.5s ease;
+}
+
+
+
+
+

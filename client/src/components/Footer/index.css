@@ -1,0 +1,9 @@
+.Footer_wrapper{ 
+    text-align: center;
+    background-color: grey;
+    width:100%;
+}
+
+#copyRight{
+    font-size: 20px;
+}

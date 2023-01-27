@@ -31,7 +31,7 @@ export default class Header extends Component {
           <header className="Header_linkWrapper">
             <Link to="/" className="Header_link" id="home"><AiFillHome/>Home</Link>
             <button  className="Header_link" onClick={this.openFavourDrawer}><AiFillStar/>Favourite</button>
-            <button  className="Header_link" onClick={this.openCartDrawer}><AiOutlineShoppingCart/>Shopping List</button>
+            <button  className="Header_link" onMouseEnter={this.openCartDrawer}><AiOutlineShoppingCart/>Shopping List</button>
 
              {/*drawer of favour */}
             <Drawer

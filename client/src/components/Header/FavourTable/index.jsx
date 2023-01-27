@@ -1,50 +1,30 @@
-import {Table,TableCell,TableHead,TableRow,Checkbox,TableSortLabel,Box,TextField,TableBody,TableContainer} from '@mui/material';
+import {Table,TableCell,TableHead,TableRow,Checkbox,TableSortLabel,Box,TableBody,TableContainer} from '@mui/material';
 import {Component} from 'react'
 import store from '../../../redux/store'
-import {AddOneToCart,DirectSetNumToCart,RemoveOneFromCart,RemoveAllFromCart} from '../../../redux/action/cart_action'
+import {RemoveFromFavour} from '../../../redux/action/favour_action'
 import {ImBin} from 'react-icons/im'
-import {AiOutlineMinusCircle,AiOutlinePlusCircle} from 'react-icons/ai'
 import './index.css'
-export default class CartTable extends Component {  
+export default class FavourTable extends Component {  
     state={selectedItems:[]}
     AllClick=(event)=>{
         if(event.target.checked)
-            this.setState({selectedItems:[...store.getState().CartReducer.cartList]})
+            this.setState({selectedItems:[...store.getState().FavourReducer.favourList]})
         else
             this.setState({selectedItems:[]})
         
     }
-    RemoveAllSelectedItemFromCart=()=>{
+    RemoveAllSelectedItemFromFavour=()=>{
         this.state.selectedItems.forEach((item)=>{
-            store.dispatch(RemoveAllFromCart(item))
+            store.dispatch(RemoveFromFavour(item))
         })
         this.setState({selectedItems:[]})
     }
-    AddOneToCart=(item)=>{
-        store.dispatch(AddOneToCart(item))
-    }
-    MinusOneFromCart=(item)=>{
-        store.dispatch(RemoveOneFromCart(item))
-        if(item.number===1){//become 0 after -1,then remove from slect item list
-             let newList=this.state.selectedItems.filter((obj)=>{
-                return obj.id!==item.id
-            })
-            this.setState({selectedItems:newList})
-        }
-    }
-    RemoveAllFromCart=(item)=>{
-        store.dispatch(RemoveAllFromCart(item))
+    RemoveFromFavour=(item)=>{
+        store.dispatch(RemoveFromFavour(item))
          let newList=this.state.selectedItems.filter((obj)=>{
                 return obj.id!==item.id
             })
         this.setState({selectedItems:newList})
-    }
-    ItemNumChangeHandler=(item,event)=>{
-        if(isNaN(event.target.value*1)||event.target.value.trim()===''||event.target.value*1>99){//filter non number input and no more than 99 items at a time
-            return
-        }
-        let newItem={...item,number:event.target.value*1}
-        store.dispatch(DirectSetNumToCart(newItem))
     }
     checkHandler=(event,item)=>{
         if(event.target.checked){
@@ -70,11 +50,6 @@ export default class CartTable extends Component {
                 label: 'price',
             },
             {
-                id: 'number',
-                numeric: true,
-                label: 'Number',
-            },
-            {
                 id: 'action',
                 numeric: true,
                 label: 'Action',
@@ -90,12 +65,12 @@ export default class CartTable extends Component {
                         <TableCell padding="checkbox">
                             <Checkbox
                                 color="primary"
-                                indeterminate={this.state.selectedItems.length > 0 && this.state.selectedItems.length < store.getState().CartReducer.cartList.length}
-                                checked={store.getState().CartReducer.cartList.length > 0 && this.state.selectedItems.length === store.getState().CartReducer.cartList.length}
+                                indeterminate={this.state.selectedItems.length > 0 && this.state.selectedItems.length < store.getState().FavourReducer.favourList.length}
+                                checked={store.getState().FavourReducer.favourList.length > 0 && this.state.selectedItems.length === store.getState().FavourReducer.favourList.length}
                                 onChange={(e)=>this.AllClick(e)}
                             />
                             {
-                                this.state.selectedItems.length>0?<button onClick={this.RemoveAllSelectedItemFromCart}>Remove Selected</button>:<div></div>
+                                this.state.selectedItems.length>0?<button onClick={this.RemoveAllSelectedItemFromFavour}>Remove Selected</button>:<div></div>
                             }
                         </TableCell>
                         {tableHeader.map((headCell) => (
@@ -115,7 +90,7 @@ export default class CartTable extends Component {
                     </TableRow>
                 </TableHead>   
                 <TableBody>
-                {store.getState().CartReducer.cartList.map((item)=>{
+                {store.getState().FavourReducer.favourList.map((item)=>{
                     return (
                     <TableRow key={item.id}>
                     <TableCell padding="checkbox">
@@ -125,19 +100,10 @@ export default class CartTable extends Component {
                             onChange={(e)=>this.checkHandler(e,item)}
                         />
                     </TableCell>
-                    <TableCell><div><img src={`../../../../productPhoto/${item.type}/${item.subType}/${item.name}.jpg`} alt="not found" className="CartTable_itemImg"></img></div>{item.name}</TableCell>
+                    <TableCell><div><img src={`../../../../productPhoto/${item.type}/${item.subType}/${item.name}.jpg` } alt="not found"className="CartTable_itemImg"></img></div>{item.name}</TableCell>
                     <TableCell>${item.price}</TableCell>
-                    <TableCell>
-                        <TextField 
-                            value={item.number}
-                            onChange={(event)=>this.ItemNumChangeHandler(item,event)}
-                            className="CartTable_itemtextField"
-                        />
-                        </TableCell>
                         <TableCell>
-                            <AiOutlineMinusCircle onClick={()=>this.MinusOneFromCart(item)} size={28}/>
-                            <AiOutlinePlusCircle onClick={()=>this.AddOneToCart(item)} size={28}/>
-                            <ImBin onClick={()=>this.RemoveAllFromCart(item)} size={28}/>
+                            <ImBin onClick={()=>this.RemoveFromFavour(item)} size={28}/>
                         </TableCell>
                     </TableRow>
                     )

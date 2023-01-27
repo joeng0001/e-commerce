@@ -3,18 +3,20 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 import {AiOutlineStar,AiFillStar,AiOutlineShoppingCart,AiOutlineCar} from 'react-icons/ai'
 import {BsFillCartCheckFill,BsCalendar3} from 'react-icons/bs'
 import './index.css'
 import store from '../../redux/store';
 import {AddToFavour,RemoveFromFavour} from '../../redux/action/favour_action'
+import {AddOneToCart,OpenCartDrawer,DirectSetNumToCart} from '../../redux/action/cart_action'
 
 export default function ProductDetail(props) {
   const [open, setOpen] = React.useState(false);
-  const [inCart, setinCart] = React.useState(false);
   const [product_cnt, setproduct_cnt] = React.useState(1);
+  const numberSelector=Array.from(Array(100).keys()).slice(1) 
   //there will be a list store all the item in favourite,display different icon
   //i.e. like vuex->redux
   const handleClickOpen = () => {
@@ -33,15 +35,32 @@ export default function ProductDetail(props) {
     store.dispatch(RemoveFromFavour(props))
 
   }
+  const addOneToCart=()=>{
+    store.dispatch(AddOneToCart({...props}))
+    setproduct_cnt(1);//reset the number after add to store
+  }
+
   const addToCart=()=>{
-    setinCart(!inCart)
-    setproduct_cnt(1);
+    let currentNum=store.getState().CartReducer.cartList.find((obj)=>{
+      return obj.id===props.id
+    })?.number
+    const totalNum=currentNum?product_cnt+currentNum*1:product_cnt;
+    store.dispatch(DirectSetNumToCart({...props,number:totalNum}))
+    setproduct_cnt(1);//reset the number after add to store
   }
   const addOneCount=()=>{
     setproduct_cnt(product_cnt+1);
   }
   const minusOneCount=()=>{
     setproduct_cnt(product_cnt-1);
+  }
+
+  const openCart=(condition)=>{
+    setOpen(false)
+    store.dispatch(OpenCartDrawer(condition))
+  }
+  const ItemNumChangeHandler =(event)=>{
+    setproduct_cnt(event.target.value);
   }
   return (
     <div>
@@ -50,7 +69,7 @@ export default function ProductDetail(props) {
       </Button>
       &nbsp;&nbsp;&nbsp;
       { 
-        store.getState().favourList.find(item => item.id==props.id)?(
+        store.getState().FavourReducer.favourList.find(item => item.id===props.id)?(
             <Button variant="outlined" onClick={removeFromFavour} size="median" color="secondary">
               <AiFillStar size={28}/>
             </Button>
@@ -62,12 +81,12 @@ export default function ProductDetail(props) {
       }
       &nbsp;&nbsp;&nbsp;
       { 
-        inCart?(
-            <Button variant="outlined" onClick={addToCart} size="median" color="success" >
+         store.getState().CartReducer.cartList.find(item => item.id===props.id)?(
+            <Button variant="outlined" onClick={()=>openCart(true)} size="median" color="success" >
               <BsFillCartCheckFill size={28}/>
             </Button>
         ):(
-          <Button variant="outlined" onClick={addToCart} size="median" color="secondary" >
+          <Button variant="outlined" onClick={addOneToCart} size="median" color="secondary" >
             <AiOutlineShoppingCart size={28}/>
           </Button>
         )
@@ -86,7 +105,7 @@ export default function ProductDetail(props) {
               src={`../../../productPhoto/${props.type}/${props.subType}/${props.name}.jpg`}
               alt="match not found"  
             />
-            <DialogContentText >
+            <DialogContent className="ProductDetail_rightContainer">
               <br/>
                <div>
                <span className="ProductDetail_prevPrice">${props.prevPrice} </span> 
@@ -106,10 +125,29 @@ export default function ProductDetail(props) {
               <br/>
               <div className="ProductDetail_counter">
                 <button className="ProductDetail_counterButton" onClick={minusOneCount} disabled={product_cnt<=1}>-</button>
-                  <span className="ProductDetail_counterValue">{product_cnt}</span>
+                  <span className="ProductDetail_counterValue"> 
+                    <TextField 
+                        value={product_cnt}
+                        select
+                        onChange={(event)=>ItemNumChangeHandler(event)}
+                    >
+                    {numberSelector.map((item) => (
+                       <MenuItem key={item} value={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  </span>
                 <button className="ProductDetail_counterButton"onClick={addOneCount} disabled={product_cnt>=99}>+</button>
                  <span className="ProductDetail_InCartMsg">
-                    <span className="ProductDetail_InCartCnt">X</span> item already in your cart
+                  {store.getState().CartReducer.cartList.findIndex((obj)=>{return obj.id===props.id;})>-1?
+                    <span><span className="ProductDetail_InCartCnt">{store.getState().CartReducer.cartList.find((obj)=>{
+                      return obj.id===props.id;
+                    })?.number}</span> in cart</span>
+                    :
+                    <span></span> 
+                  }
+
                 </span>
               </div>
               <br/>
@@ -125,14 +163,12 @@ export default function ProductDetail(props) {
                <div >
                 <BsCalendar3 size={28}/> arrived in 7 days Promise
               </div> 
-              <div>To Be Added </div>
-            </DialogContentText>
-            
+            </DialogContent >      
           </DialogContent>
           <DialogActions>
             <Button  onClick={handleClose} className="ProductDetail_uiBackBtn">Back</Button>
              { 
-              store.getState().favourList.find(item => item.id==props.id)?(
+              store.getState().FavourReducer.favourList.find(item => item.id===props.id)?(
                   <Button variant="outlined" onClick={RemoveFromFavour} size="large" color="secondary">
                     <AiFillStar size={28}/>
                     In Favour
@@ -145,8 +181,8 @@ export default function ProductDetail(props) {
               )
             }
             { 
-              inCart?(
-                  <Button variant="outlined" onClick={addToCart} size="large" color="success" className="ProductDetail_uiCartBtn">
+              store.getState().CartReducer.cartList.find(item => item.id===props.id)?(
+                  <Button variant="outlined" onClick={()=>openCart(true)} size="large" color="success" className="ProductDetail_uiCartBtn">
                     <BsFillCartCheckFill size={28}/>
                     Added In Cart
                   </Button>

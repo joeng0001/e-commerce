@@ -1,4 +1,5 @@
-import {configureStore } from '@reduxjs/toolkit'
+import {configureStore ,combineReducers} from '@reduxjs/toolkit'
 import CartReducer from './reducer/cart_reducer'
 import FavourReducer from './reducer/favour_reducer'
-export default configureStore({ reducer: FavourReducer })
+let rootReducer=combineReducers({CartReducer,FavourReducer})
+export default configureStore({reducer: rootReducer})

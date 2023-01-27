@@ -1,3 +1,8 @@
-export const AddToCart=data=>({type:'AddToCart',data})
+export const OpenCartDrawer=data=>({type:'OpenCartDrawer',data})
 
-export const RemoveFromCart=data=>({type:'RemoveFromCart',data})
+
+export const AddOneToCart=data=>({type:'AddOneToCart',data})
+export const DirectSetNumToCart=data=>({type:'DirectSetNumToCart',data})
+
+export const RemoveAllFromCart=data=>({type:'RemoveAllFromCart',data})
+export const RemoveOneFromCart=data=>({type:'RemoveOneFromCart',data})

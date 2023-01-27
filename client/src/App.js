@@ -1,7 +1,6 @@
 import './App.css';
 import Header from './components/Header'
 import Footer from './components/Footer'
-import store from './redux/store'
 import {
   useRoutes
 } from "react-router-dom";

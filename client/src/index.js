@@ -13,4 +13,12 @@ root.render(
         <App />
       </BrowserRouter>
 );
+
+store.subscribe(()=>{
+  root.render(
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+  );
+})
 reportWebVitals();

@@ -54,3 +54,18 @@
     position:absolute;
     left:0px;
 }
+
+.Header_checkOutBtn{
+    position:absolute;
+    right:10px;
+    font-size:20px;
+    border-radius: 10%;
+    background-color: yellowgreen;
+}
+
+.Header_checkOutBtn:hover{
+    border-color: rgb(46, 117, 46);
+    background: rgb(196, 245, 196);
+    transform: translateX(10px);
+    transition: transform 0.5s ease;
+}

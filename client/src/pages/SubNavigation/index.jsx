@@ -1,5 +1,5 @@
 import './index.css'
-import { useParams,Link ,useNavigate  } from 'react-router-dom';
+import { useParams,Link } from 'react-router-dom';
 import {BsArrowDown} from 'react-icons/bs'
 import React ,{useState}from 'react';
 import ProductList from '../../components/ProductList';
@@ -14,17 +14,9 @@ export default function SubNavigation() {//use functional component for using us
         setForceUpdate(!forceUpdate)
     })
 
-
-
-
-
     const navlist  =subNavigationList; //i.e. under food,sub list contain apple,orange...
     const prolist  =productList;
     const { type,subType } = useParams();
-    // const navigate=useNavigate();
-    // navigate("/");
-    //navigate to home
-    //need to perform checking in param
     const [showMoreMsg, setShowMoreMsg] = useState(navlist[type]?.length>4);//display the show more msg if more than 4 subtype
     const [page, setPage] = useState(1);//default 1 page
     const [totalPage,setTotalPage]=useState(Math.ceil(prolist[type][subType]?.length/12)>0?Math.ceil(prolist[type][subType]?.length/12):1)///make sure at least 1

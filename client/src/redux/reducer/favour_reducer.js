@@ -1,9 +1,9 @@
-export default function favourReducer(preState={cartList:[],favourList:[]},action){
+export default function favourReducer(preState={favourList:[],open:false},action){
     const {type,data}=action
-    console.log('call favourreducer')
     switch(type){
+        case 'OpenFavourDrawer':
+            return {...preState,open:data}
         case 'AddToFavour':
-            console.log({...preState,favourList:[...preState.favourList,data]})
             return {...preState,favourList:[...preState.favourList,data]}
         case 'RemoveFromFavour':
                 return {...preState,favourList:(preState.favourList).filter((obj)=>{

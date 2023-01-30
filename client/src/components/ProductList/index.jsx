@@ -7,14 +7,14 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 export default class ProductList extends Component {
-  state={opendialog:false}
-  OpenDialog=(condition)=>{
-     this.setState({opendialog:condition})
+  state={opendialogID:null}
+  OpenDialogByCompareID=(id)=>{
+     this.setState({opendialogID:id})
   }
   render(){
     const {type,subType,list}=this.props;
+
      return(
-        
         <div className="ProductList_wrapper">
           <div className="ProductList_tableless">
             {
@@ -24,11 +24,11 @@ export default class ProductList extends Component {
                     <CardMedia
                       className="ProductList_image"
                       image={`../../../productPhoto/${type}/${subType}/${obj.name}.jpg`}
-                      onClick={()=>this.OpenDialog(true)}
+                      onClick={()=>this.OpenDialogByCompareID(obj.id)}
                     />
                     <CardContent>
                       <div>
-                          <span className="ProductList_card_itemName" onClick={()=>this.OpenDialog(true)}>
+                          <span className="ProductList_card_itemName" onClick={()=>this.OpenDialogByCompareID(obj.id)}>
                             {obj.name } 
                           </span>
                           &nbsp;&nbsp;&nbsp;
@@ -42,7 +42,7 @@ export default class ProductList extends Component {
                       
                     </CardContent>
                     <CardActions>
-                        <ProductDetail {...obj} type={type} subType={subType} open={this.state.opendialog} OpenDialog={this.OpenDialog}/>{/*display a button to open a dialog*/}
+                        <ProductDetail {...obj} type={type} subType={subType} open={this.state.opendialogID===obj.id} OpenDialogByCompareID={this.OpenDialogByCompareID}/>{/*display a button to open a dialog*/}
                     </CardActions>
                   </Card>
 

@@ -16,26 +16,33 @@ import {AddOneToCart,OpenCartDrawer,DirectSetNumToCart} from '../../redux/action
 export default function ProductDetail(props) {
   const [product_cnt, setproduct_cnt] = React.useState(1);
   const numberSelector=Array.from(Array(100).keys()).slice(1) 
-  //there will be a list store all the item in favourite,display different icon
-  //i.e. like vuex->redux
   const handleClickOpen = () => {
-    props.OpenDialog(true)
+    props.OpenDialogByCompareID(props.id)
   };
 
   const handleClose = () => {
-     props.OpenDialog(false)
+     props.OpenDialogByCompareID(null)
   };
   
   const addToFavour=()=>{
-    //props is all the detail of an obj->detail of product
-    store.dispatch(AddToFavour(props))
+    let props_obj=JSON.parse(JSON.stringify(props));
+    delete props_obj.OpenDialogByCompareID;
+    delete props_obj.open;
+    //props_obj is now all the detail of an obj->detail of product
+    store.dispatch(AddToFavour(props_obj))
   }
   const removeFromFavour=()=>{
-    store.dispatch(RemoveFromFavour(props))
+     let props_obj=JSON.parse(JSON.stringify(props));
+    delete props_obj.OpenDialogByCompareID;
+    delete props_obj.open;
+    store.dispatch(RemoveFromFavour(props_obj))
 
   }
   const addOneToCart=()=>{
-    store.dispatch(AddOneToCart({...props}))
+     let props_obj=JSON.parse(JSON.stringify(props));
+    delete props_obj.OpenDialogByCompareID;
+    delete props_obj.open;
+    store.dispatch(AddOneToCart(props_obj))
     setproduct_cnt(1);//reset the number after add to store
   }
 
@@ -44,7 +51,10 @@ export default function ProductDetail(props) {
       return obj.id===props.id
     })?.number
     const totalNum=currentNum?product_cnt+currentNum*1:product_cnt;
-    store.dispatch(DirectSetNumToCart({...props,number:totalNum}))
+     let props_obj=JSON.parse(JSON.stringify(props));
+    delete props_obj.OpenDialogByCompareID;
+    delete props_obj.open;
+    store.dispatch(DirectSetNumToCart({...props_obj,number:totalNum}))
     setproduct_cnt(1);//reset the number after add to store
   }
   const addOneCount=()=>{
@@ -55,7 +65,7 @@ export default function ProductDetail(props) {
   }
 
   const openCart=(condition)=>{
-    props.OpenDialog(false)
+    props.OpenDialogByCompareID(null)
     store.dispatch(OpenCartDrawer(condition))
   }
   const ItemNumChangeHandler =(event)=>{

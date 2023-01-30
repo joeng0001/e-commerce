@@ -14,17 +14,16 @@ import {AddToFavour,RemoveFromFavour} from '../../redux/action/favour_action'
 import {AddOneToCart,OpenCartDrawer,DirectSetNumToCart} from '../../redux/action/cart_action'
 
 export default function ProductDetail(props) {
-  const [open, setOpen] = React.useState(false);
   const [product_cnt, setproduct_cnt] = React.useState(1);
   const numberSelector=Array.from(Array(100).keys()).slice(1) 
   //there will be a list store all the item in favourite,display different icon
   //i.e. like vuex->redux
   const handleClickOpen = () => {
-    setOpen(true);
+    props.OpenDialog(true)
   };
 
   const handleClose = () => {
-    setOpen(false);
+     props.OpenDialog(false)
   };
   
   const addToFavour=()=>{
@@ -56,7 +55,7 @@ export default function ProductDetail(props) {
   }
 
   const openCart=(condition)=>{
-    setOpen(false)
+    props.OpenDialog(false)
     store.dispatch(OpenCartDrawer(condition))
   }
   const ItemNumChangeHandler =(event)=>{
@@ -92,7 +91,7 @@ export default function ProductDetail(props) {
         )
       }
         <Dialog
-          open={open}
+          open={props.open}
           onClose={handleClose}
           maxWidth='lg'
           fullWidth={true}

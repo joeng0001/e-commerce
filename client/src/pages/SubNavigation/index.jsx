@@ -6,6 +6,7 @@ import ProductList from '../../components/ProductList';
 import {subNavigationList,productList} from '../../sampleData'
 import Pagination from '@mui/material/Pagination';
 import store from '../../redux/store'
+import {GiSeaDragon} from 'react-icons/gi'
 export default function SubNavigation() {//use functional component for using useParam()
 
      //whenever store data change,rerender whole APP by update state
@@ -47,6 +48,7 @@ export default function SubNavigation() {//use functional component for using us
                     <span>&nbsp;{'>'}&nbsp;</span>
                     <Link className="SubNavigation_link" to={`/subNavigation/${type}/${subType}`}>{subType}</Link>
                 </div>
+                <GiSeaDragon size={100}/>
                 <div className="SubNavigation_Container" onScroll={scrollHandler} ref={ContainerRef}>
                     {
                         navlist[type]?.map(NavsubType=>{

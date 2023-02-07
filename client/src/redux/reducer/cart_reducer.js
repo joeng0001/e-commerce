@@ -16,8 +16,7 @@ export default function cartReducer(preState={cartList:[],open:false},action){
                 }
                 return {...preState,cartList:newCartList}
             }
-            //no match found in iist,init the number to 1
-            data.number=1
+            //no match found in iist,insert to list
             return {...preState,cartList:[...preState.cartList,data]}
 
         case 'RemoveOneFromCart':

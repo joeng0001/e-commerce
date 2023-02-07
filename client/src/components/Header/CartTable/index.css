@@ -8,3 +8,7 @@
 .CartTable_icon{
     cursor:pointer;
 }
+.CartTable_btn {
+    padding:0;
+    border:none;
+}

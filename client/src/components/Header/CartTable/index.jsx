@@ -135,9 +135,9 @@ export default class CartTable extends Component {
                         />
                         </TableCell>
                         <TableCell >
-                            <AiOutlineMinusCircle onClick={()=>this.MinusOneFromCart(item)} size={28} className="CartTable_icon"/>
-                            <AiOutlinePlusCircle onClick={()=>this.AddOneToCart(item)} size={28} className="CartTable_icon"/>
-                            <ImBin onClick={()=>this.RemoveAllFromCart(item)} size={28} className="CartTable_icon"/>
+                            <button className="CartTable_btn"><AiOutlineMinusCircle onClick={()=>this.MinusOneFromCart(item)} size={28} className="CartTable_icon"/></button>
+                            <button className="CartTable_btn"><AiOutlinePlusCircle onClick={()=>this.AddOneToCart(item)} size={28} className="CartTable_icon"/></button>
+                            <button className="CartTable_btn"><ImBin onClick={()=>this.RemoveAllFromCart(item)} size={28} className="CartTable_icon"/></button>
                         </TableCell>
                     </TableRow>
                     )

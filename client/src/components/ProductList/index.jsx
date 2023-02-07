@@ -44,7 +44,7 @@ export default class ProductList extends Component {
   addOneToCart=(item)=>{
     item.type=this.props.type
     item.subType=this.props.subType
-    store.dispatch(AddOneToCart(item))
+    store.dispatch(AddOneToCart({...item,number:1}))
   }
   render(){
     const {type,subType,list}=this.props;

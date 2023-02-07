@@ -134,10 +134,10 @@ export default class CartTable extends Component {
                             className="CartTable_itemtextField"
                         />
                         </TableCell>
-                        <TableCell>
-                            <AiOutlineMinusCircle onClick={()=>this.MinusOneFromCart(item)} size={28}/>
-                            <AiOutlinePlusCircle onClick={()=>this.AddOneToCart(item)} size={28}/>
-                            <ImBin onClick={()=>this.RemoveAllFromCart(item)} size={28}/>
+                        <TableCell >
+                            <AiOutlineMinusCircle onClick={()=>this.MinusOneFromCart(item)} size={28} className="CartTable_icon"/>
+                            <AiOutlinePlusCircle onClick={()=>this.AddOneToCart(item)} size={28} className="CartTable_icon"/>
+                            <ImBin onClick={()=>this.RemoveAllFromCart(item)} size={28} className="CartTable_icon"/>
                         </TableCell>
                     </TableRow>
                     )

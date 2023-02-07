@@ -103,7 +103,7 @@ export default class FavourTable extends Component {
                     <TableCell><div><img src={`../../../../productPhoto/${item.type}/${item.subType}/${item.name}.jpg` } alt="not found"className="CartTable_itemImg"></img></div>{item.name}</TableCell>
                     <TableCell>${item.price}</TableCell>
                         <TableCell>
-                            <ImBin onClick={()=>this.RemoveFromFavour(item)} size={28}/>
+                            <ImBin onClick={()=>this.RemoveFromFavour(item)} size={28} className="FavourTable_icon"/>
                         </TableCell>
                     </TableRow>
                     )

@@ -5,3 +5,6 @@
 .CartTable_itemtextField{
     width:60px;
 }
+.CartTable_icon{
+    cursor:pointer;
+}

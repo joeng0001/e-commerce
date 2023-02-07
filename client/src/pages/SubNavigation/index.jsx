@@ -35,6 +35,7 @@ export default function SubNavigation() {//use functional component for using us
     }
     function subTypeChange(event){
         setTotalPage(Math.ceil(prolist[type][event.target.textContent]?.length/12)>0?Math.ceil(prolist[type][event.target.textContent].length/12):1)
+        setPage(1)
     }
       return (
         <div className="SubNavigation_wrapper">
@@ -76,7 +77,9 @@ export default function SubNavigation() {//use functional component for using us
                 }
             </div>
             <div className="SubNavigation_rightBar">
-                <Pagination count={totalPage} page={page} color="secondary" size="large" onChange={handlePageChange} className="SubNavigation_paging" /> 
+                <Pagination 
+                    count={Math.ceil(prolist[type][subType]?.length/12)>0?Math.ceil(prolist[type][subType].length/12):1} 
+                    page={page} color="secondary" size="large" onChange={handlePageChange} className="SubNavigation_paging" /> 
                 <ProductList type={type} subType={subType} list={prolist[type][subType].slice(page*12-12,page*12)}/>
                 {/* cannot store list in state-> cannot detect param change and update component */}
             </div>

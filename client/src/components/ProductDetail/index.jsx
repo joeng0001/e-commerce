@@ -11,98 +11,68 @@ import {BsFillCartCheckFill,BsCalendar3} from 'react-icons/bs'
 import './index.css'
 import store from '../../redux/store';
 import {AddToFavour,RemoveFromFavour} from '../../redux/action/favour_action'
-import {AddOneToCart,OpenCartDrawer,DirectSetNumToCart} from '../../redux/action/cart_action'
+import {OpenCartDrawer,DirectSetNumToCart} from '../../redux/action/cart_action'
 
 export default function ProductDetail(props) {
   const [product_cnt, setproduct_cnt] = React.useState(1);
   const numberSelector=Array.from(Array(100).keys()).slice(1) 
-  const handleClickOpen = () => {
-    props.OpenDialogByCompareID(props.id)
-  };
-
-  const handleClose = () => {
-     props.OpenDialogByCompareID(null)
-  };
-  
   const addToFavour=()=>{
     let props_obj=JSON.parse(JSON.stringify(props));
-    delete props_obj.OpenDialogByCompareID;
-    delete props_obj.open;
+    delete props_obj.open
+    delete props_obj.openDialog
+    delete props_obj.closeDialog
     //props_obj is now all the detail of an obj->detail of product
     store.dispatch(AddToFavour(props_obj))
   }
   const removeFromFavour=()=>{
-     let props_obj=JSON.parse(JSON.stringify(props));
-    delete props_obj.OpenDialogByCompareID;
-    delete props_obj.open;
-    store.dispatch(RemoveFromFavour(props_obj))
-
+    let obj={
+      id:props.id
+    }
+    store.dispatch(RemoveFromFavour(obj))
   }
-  const addOneToCart=()=>{
-     let props_obj=JSON.parse(JSON.stringify(props));
-    delete props_obj.OpenDialogByCompareID;
-    delete props_obj.open;
-    store.dispatch(AddOneToCart(props_obj))
-    setproduct_cnt(1);//reset the number after add to store
-  }
-
   const addToCart=()=>{
     let currentNum=store.getState().CartReducer.cartList.find((obj)=>{
       return obj.id===props.id
     })?.number
     const totalNum=currentNum?product_cnt+currentNum*1:product_cnt;
      let props_obj=JSON.parse(JSON.stringify(props));
-    delete props_obj.OpenDialogByCompareID;
-    delete props_obj.open;
+    delete props_obj.open
+    delete props_obj.openDialog
+    delete props_obj.closeDialog
     store.dispatch(DirectSetNumToCart({...props_obj,number:totalNum}))
     setproduct_cnt(1);//reset the number after add to store
   }
   const addOneCount=()=>{
+    if(store.getState().CartReducer.cartList.findIndex((obj)=>{return obj.id===props.id})>-1){
+      //if already in cart,do not add item in dialog but directly in cart list
+      openCart();
+      return
+    }
     setproduct_cnt(product_cnt+1);
   }
   const minusOneCount=()=>{
     setproduct_cnt(product_cnt-1);
   }
-
-  const openCart=(condition)=>{
-    props.OpenDialogByCompareID(null)
-    store.dispatch(OpenCartDrawer(condition))
+  const openCart=()=>{
+    props.closeDialog()
+    store.dispatch(OpenCartDrawer(true))
   }
   const ItemNumChangeHandler =(event)=>{
+    if(store.getState().CartReducer.cartList.findIndex((obj)=>{return obj.id===props.id})>-1){
+      //if already in cart,do not add item in dialog but directly in cart list
+      openCart();
+      return
+    }
     setproduct_cnt(event.target.value);
   }
+  const closeHandler=()=>{
+    props.closeDialog()
+    setproduct_cnt(1)
+  }
   return (
-    <div>
-      <Button variant="contained" onClick={handleClickOpen} size="median">
-          Detail
-      </Button>
-      &nbsp;&nbsp;&nbsp;
-      { 
-        store.getState().FavourReducer.favourList.find(item => item.id===props.id)?(
-            <Button variant="outlined" onClick={removeFromFavour} size="median" color="secondary">
-              <AiFillStar size={28}/>
-            </Button>
-        ):(
-          <Button variant="outlined" onClick={addToFavour} size="median" color="secondary">
-            <AiOutlineStar size={28}/>
-          </Button>
-        )
-      }
-      &nbsp;&nbsp;&nbsp;
-      { 
-         store.getState().CartReducer.cartList.find(item => item.id===props.id)?(
-            <Button variant="outlined" onClick={()=>openCart(true)} size="median" color="success" >
-              <BsFillCartCheckFill size={28}/>
-            </Button>
-        ):(
-          <Button variant="outlined" onClick={addOneToCart} size="median" color="secondary" >
-            <AiOutlineShoppingCart size={28}/>
-          </Button>
-        )
-      }
         <Dialog
           open={props.open}
-          onClose={handleClose}
+          onClose={closeHandler}
           maxWidth='lg'
           fullWidth={true}
           scroll="body"
@@ -175,10 +145,10 @@ export default function ProductDetail(props) {
             </DialogContent >      
           </DialogContent>
           <DialogActions>
-            <Button  onClick={handleClose} className="ProductDetail_uiBackBtn">Back</Button>
+            <Button  onClick={closeHandler} className="ProductDetail_uiBackBtn">Back</Button>
              { 
               store.getState().FavourReducer.favourList.find(item => item.id===props.id)?(
-                  <Button variant="outlined" onClick={RemoveFromFavour} size="large" color="secondary">
+                  <Button variant="outlined" onClick={removeFromFavour} size="large" color="secondary">
                     <AiFillStar size={28}/>
                     In Favour
                   </Button>
@@ -191,7 +161,7 @@ export default function ProductDetail(props) {
             }
             { 
               store.getState().CartReducer.cartList.find(item => item.id===props.id)?(
-                  <Button variant="outlined" onClick={()=>openCart(true)} size="large" color="success" className="ProductDetail_uiCartBtn">
+                  <Button variant="outlined" onClick={openCart} size="large" color="success" className="ProductDetail_uiCartBtn">
                     <BsFillCartCheckFill size={28}/>
                     Added In Cart
                   </Button>
@@ -204,7 +174,5 @@ export default function ProductDetail(props) {
             }
           </DialogActions>
         </Dialog>
-      
-    </div>
   );
 }

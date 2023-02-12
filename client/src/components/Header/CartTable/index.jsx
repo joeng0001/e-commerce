@@ -4,9 +4,10 @@ import store from '../../../redux/store'
 import {AddOneToCart,DirectSetNumToCart,RemoveOneFromCart,RemoveAllFromCart} from '../../../redux/action/cart_action'
 import {ImBin} from 'react-icons/im'
 import {AiOutlineMinusCircle,AiOutlinePlusCircle} from 'react-icons/ai'
+import ProductDetail from '../../ProductDetail';
 import './index.css'
 export default class CartTable extends Component {  
-    state={selectedItems:[]}
+    state={selectedItems:[],dialogItem:null,dialogOpen:false}
     AllClick=(event)=>{
         if(event.target.checked)
             this.setState({selectedItems:[...store.getState().CartReducer.cartList]})
@@ -27,7 +28,7 @@ export default class CartTable extends Component {
         store.dispatch(RemoveOneFromCart(item))
         if(item.number===1){//become 0 after -1,then remove from slect item list
              let newList=this.state.selectedItems.filter((obj)=>{
-                return obj.id!==item.id
+                return obj.PID!==item.PID
             })
             this.setState({selectedItems:newList})
         }
@@ -35,7 +36,7 @@ export default class CartTable extends Component {
     RemoveAllFromCart=(item)=>{
         store.dispatch(RemoveAllFromCart(item))
          let newList=this.state.selectedItems.filter((obj)=>{
-                return obj.id!==item.id
+                return obj.PID!==item.PID
             })
         this.setState({selectedItems:newList})
     }
@@ -43,7 +44,7 @@ export default class CartTable extends Component {
         if(isNaN(event.target.value*1)||event.target.value.trim()===''||event.target.value*1>99){//filter non number input and no more than 99 items at a time
             return
         }
-        let newItem={...item,number:event.target.value*1}
+        let newItem={...item,orderNum:event.target.value*1}
         store.dispatch(DirectSetNumToCart(newItem))
     }
     checkHandler=(event,item)=>{
@@ -51,11 +52,17 @@ export default class CartTable extends Component {
             this.setState({selectedItems:[...this.state.selectedItems,item]})
         }else{
             let newSelectedItemsList=this.state.selectedItems.filter((obj)=>{
-                return obj.id!==item.id
+                return obj.PID!==item.PID
             })
             this.setState({selectedItems:newSelectedItemsList})
         }
         
+    }
+    openDialog=(item)=>{
+        this.setState({dialogItem:item,dialogOpen:true});
+    }
+    closeDialog=()=>{
+        this.setState({dialogItem:null,dialogOpen:false});
     }
     render(){
         let tableHeader=[
@@ -117,19 +124,25 @@ export default class CartTable extends Component {
                 <TableBody>
                 {store.getState().CartReducer.cartList.map((item)=>{
                     return (
-                    <TableRow key={item.id}>
+                    <TableRow key={item.PID}>
                     <TableCell padding="checkbox">
                         <Checkbox
                             color="primary"
-                            checked={this.state.selectedItems.findIndex((obj)=>{return obj.id===item.id})>-1}
+                            checked={this.state.selectedItems.findIndex((obj)=>{return obj.PID===item.PID})>-1}
                             onChange={(e)=>this.checkHandler(e,item)}
                         />
                     </TableCell>
-                    <TableCell><div><img src={`../../../../productPhoto/${item.type}/${item.subType}/${item.name}.jpg`} alt="not found" className="CartTable_itemImg"></img></div>{item.name}</TableCell>
+                    <TableCell>
+                        <div>
+                            <img src={`../../../../productPhoto/${item.type}/${item.subType}/${item.name}.jpg`} alt="not found" 
+                            className="CartTable_itemImg" onClick={()=>this.openDialog(item)}></img>
+                        </div>
+                        {item.name}
+                    </TableCell>
                     <TableCell>${item.price}</TableCell>
                     <TableCell>
                         <TextField 
-                            value={item.number}
+                            value={item.orderNum}
                             onChange={(event)=>this.ItemNumChangeHandler(item,event)}
                             className="CartTable_itemtextField"
                         />
@@ -144,6 +157,8 @@ export default class CartTable extends Component {
                 })}
                 </TableBody>
             </Table>  
+             <ProductDetail {...this.state.dialogItem} 
+             open={this.state.dialogOpen} openDialog={this.openDialog} closeDialog={this.closeDialog} /> 
         </TableContainer>
     )}
 }

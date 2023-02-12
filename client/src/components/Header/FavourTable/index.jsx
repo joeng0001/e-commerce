@@ -22,7 +22,7 @@ export default class FavourTable extends Component {
     RemoveFromFavour=(item)=>{
         store.dispatch(RemoveFromFavour(item))
          let newList=this.state.selectedItems.filter((obj)=>{
-                return obj.id!==item.id
+                return obj.PID!==item.PID
             })
         this.setState({selectedItems:newList})
     }
@@ -31,7 +31,7 @@ export default class FavourTable extends Component {
             this.setState({selectedItems:[...this.state.selectedItems,item]})
         }else{
             let newSelectedItemsList=this.state.selectedItems.filter((obj)=>{
-                return obj.id!==item.id
+                return obj.PID!==item.PID
             })
             this.setState({selectedItems:newSelectedItemsList})
         }
@@ -92,11 +92,11 @@ export default class FavourTable extends Component {
                 <TableBody>
                 {store.getState().FavourReducer.favourList.map((item)=>{
                     return (
-                    <TableRow key={item.id}>
+                    <TableRow key={item.PID}>
                     <TableCell padding="checkbox">
                         <Checkbox
                             color="primary"
-                            checked={this.state.selectedItems.findIndex((obj)=>{return obj.id===item.id})>-1}
+                            checked={this.state.selectedItems.findIndex((obj)=>{return obj.PID===item.PID})>-1}
                             onChange={(e)=>this.checkHandler(e,item)}
                         />
                     </TableCell>

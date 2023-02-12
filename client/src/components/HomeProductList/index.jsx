@@ -3,15 +3,15 @@ import ProductList from '../../components/ProductList'
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import {useState} from 'react'
-import {productList} from '../../sampleData'
+import store from '../../redux/store';
 function HomeProductList(props) {
+  
   const [value, setValue] = useState(0);
   const [subtype, setSubtype] = useState("new");
-  const [listToDisplay,setlistToDisplay]=useState(productList[props.name][subtype]?.slice(0,12));
-
+  const [listToDisplay,setlistToDisplay]=useState(store.getState().ItemReducer.itemList[props.name][subtype]?.slice(0,12));
   const handleListChange = (event)=> {
     setSubtype(event.target.textContent)
-    setlistToDisplay(productList[props.name][event.target.textContent]?.slice(0,12))
+    setlistToDisplay(store.getState().ItemReducer.itemList[props.name][event.target.textContent]?.slice(0,12))
   };
   const handleTabChange=(event,newValue)=>{
     setValue(newValue)
@@ -32,6 +32,7 @@ function HomeProductList(props) {
                 })
             }
             </Tabs>
+          
         <ProductList type={props?.name} subType={subtype} list={listToDisplay}/>
         
     </div>

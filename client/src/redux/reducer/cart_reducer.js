@@ -7,12 +7,12 @@ export default function cartReducer(preState={cartList:[],open:false},action){
             return {...preState,open:data}
         case 'AddOneToCart':
             duplicateItemIndex=preState.cartList.findIndex((item)=>{
-                return item.id===data.id
+                return item.PID===data.PID
             })
             newCartList=JSON.parse(JSON.stringify(preState.cartList));
             if (duplicateItemIndex>-1){
-                if(newCartList[duplicateItemIndex].number<99){
-                    newCartList[duplicateItemIndex].number+=1
+                if(newCartList[duplicateItemIndex].orderNum<99){
+                    newCartList[duplicateItemIndex].orderNum+=1
                 }
                 return {...preState,cartList:newCartList}
             }
@@ -21,12 +21,12 @@ export default function cartReducer(preState={cartList:[],open:false},action){
 
         case 'RemoveOneFromCart':
             duplicateItemIndex=preState.cartList.findIndex((item)=>{
-                return item.id===data.id
+                return item.PID===data.PID
             })
             newCartList=JSON.parse(JSON.stringify(preState.cartList));
             if (duplicateItemIndex>-1){
-                if(newCartList[duplicateItemIndex].number>1){
-                    newCartList[duplicateItemIndex].number-=1
+                if(newCartList[duplicateItemIndex].orderNum>1){
+                    newCartList[duplicateItemIndex].orderNum-=1
                 }
                 return {...preState,cartList:newCartList}
             }
@@ -34,12 +34,12 @@ export default function cartReducer(preState={cartList:[],open:false},action){
         
         case 'DirectSetNumToCart':
             duplicateItemIndex=preState.cartList.findIndex((item)=>{
-                return item.id===data.id
+                return item.PID===data.PID
             })
             newCartList=JSON.parse(JSON.stringify(preState.cartList));
             if (duplicateItemIndex>-1){
-                if(data.number*1<=99){
-                    newCartList[duplicateItemIndex].number=data.number*1
+                if(data.orderNum*1<=99){
+                    newCartList[duplicateItemIndex].orderNum=data.orderNum*1
                 }
                 return {...preState,cartList:newCartList}
             }
@@ -47,7 +47,7 @@ export default function cartReducer(preState={cartList:[],open:false},action){
 
         case 'RemoveAllFromCart':
             let res=(preState.cartList).filter((obj)=>{
-                return obj.id!==data.id
+                return obj.PID!==data.PID
             });
             return {...preState,cartList:res}
         default:

@@ -4,7 +4,7 @@ import { Drawer } from '@mui/material';
 import {subNavigationList} from '../../../sampleData'
 import {Menu,MenuItem,Card} from '@mui/material'
 export default function LeftDrawer(props) {
-
+  const [type, setType] = React.useState(props.currType);
   return (
         <Drawer
             variant="permanent"
@@ -21,10 +21,12 @@ export default function LeftDrawer(props) {
                 {
                     Object.keys(subNavigationList).map((type)=>{
                         return (
-                            // <div key={subtype.id}>{subtype.name}</div>
                             <div key={subNavigationList[type].id}>
                                 <Card
-                                    onClick={event=>props.typeChange(event)}
+                                    onClick={event=>{
+                                        props.typeClick(event);
+                                        setType(event.target.textContent)
+                                    }}
                                     className="drawer_card"
                                 >
                                     {type.toString()}
@@ -44,8 +46,8 @@ export default function LeftDrawer(props) {
                 onClose={props.closeMenu}
             >
                 {
-                    subNavigationList[props.currType]?.map((subtype)=>{
-                        return  <MenuItem onClick={(e)=>props.subTypeChange(e)}>{subtype.name}</MenuItem>
+                    subNavigationList[type]?.map((subtype)=>{
+                        return  <MenuItem onClick={(e)=>props.subTypeChange(e,type)} >{subtype.name}</MenuItem>
                     })
                 }
                 

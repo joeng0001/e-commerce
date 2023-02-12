@@ -26,24 +26,24 @@ export default function ProductDetail(props) {
   }
   const removeFromFavour=()=>{
     let obj={
-      id:props.id
+      PID:props.PID
     }
     store.dispatch(RemoveFromFavour(obj))
   }
   const addToCart=()=>{
     let currentNum=store.getState().CartReducer.cartList.find((obj)=>{
-      return obj.id===props.id
-    })?.number
+      return obj.PID===props.PID
+    })?.orderNum
     const totalNum=currentNum?product_cnt+currentNum*1:product_cnt;
      let props_obj=JSON.parse(JSON.stringify(props));
     delete props_obj.open
     delete props_obj.openDialog
     delete props_obj.closeDialog
-    store.dispatch(DirectSetNumToCart({...props_obj,number:totalNum}))
+    store.dispatch(DirectSetNumToCart({...props_obj,orderNum:totalNum}))
     setproduct_cnt(1);//reset the number after add to store
   }
   const addOneCount=()=>{
-    if(store.getState().CartReducer.cartList.findIndex((obj)=>{return obj.id===props.id})>-1){
+    if(store.getState().CartReducer.cartList.findIndex((obj)=>{return obj.PID===props.PID})>-1){
       //if already in cart,do not add item in dialog but directly in cart list
       openCart();
       return
@@ -58,7 +58,7 @@ export default function ProductDetail(props) {
     store.dispatch(OpenCartDrawer(true))
   }
   const ItemNumChangeHandler =(event)=>{
-    if(store.getState().CartReducer.cartList.findIndex((obj)=>{return obj.id===props.id})>-1){
+    if(store.getState().CartReducer.cartList.findIndex((obj)=>{return obj.PID===props.PID})>-1){
       //if already in cart,do not add item in dialog but directly in cart list
       openCart();
       return
@@ -92,7 +92,7 @@ export default function ProductDetail(props) {
                 props.inventory>100?"ProductDetail_moreThan100"
                 :props.inventory<3?"ProductDetail_lessThan3"
                 :"ProductDetail_between3To100"}>
-                  {props.inventory<3?<span>Only <span className="ProductDetail_inventoryHighlight">{props.inventory}</span> left!</span>
+                  {props.inventory<3?<span>Only <span className="ProductDetail_inventoryHighlight">{parseInt(props.inventory,10)}</span> left!</span>
                   :<span >Current Stock: {props.inventory}</span>}
                 </span>
               </div>
@@ -119,10 +119,10 @@ export default function ProductDetail(props) {
                   </span>
                 <button className="ProductDetail_counterButton"onClick={addOneCount} disabled={product_cnt>=99}>+</button>
                  <span className="ProductDetail_InCartMsg">
-                  {store.getState().CartReducer.cartList.findIndex((obj)=>{return obj.id===props.id;})>-1?
+                  {store.getState().CartReducer.cartList.findIndex((obj)=>{return obj.PID===props.PID;})>-1?
                     <span><span className="ProductDetail_InCartCnt">{store.getState().CartReducer.cartList.find((obj)=>{
-                      return obj.id===props.id;
-                    })?.number}</span> in cart</span>
+                      return obj.PID===props.PID;
+                    })?.orderNum}</span> in cart</span>
                     :
                     <span></span> 
                   }
@@ -147,7 +147,7 @@ export default function ProductDetail(props) {
           <DialogActions>
             <Button  onClick={closeHandler} className="ProductDetail_uiBackBtn">Back</Button>
              { 
-              store.getState().FavourReducer.favourList.find(item => item.id===props.id)?(
+              store.getState().FavourReducer.favourList.find(item => item.PID===props.PID)?(
                   <Button variant="outlined" onClick={removeFromFavour} size="large" color="secondary">
                     <AiFillStar size={28}/>
                     In Favour
@@ -160,7 +160,7 @@ export default function ProductDetail(props) {
               )
             }
             { 
-              store.getState().CartReducer.cartList.find(item => item.id===props.id)?(
+              store.getState().CartReducer.cartList.find(item => item.PID===props.PID)?(
                   <Button variant="outlined" onClick={openCart} size="large" color="success" className="ProductDetail_uiCartBtn">
                     <BsFillCartCheckFill size={28}/>
                     Added In Cart

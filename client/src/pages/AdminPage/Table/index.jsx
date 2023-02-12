@@ -2,10 +2,13 @@ import {Table,TableCell,TableHead,TableRow,Checkbox,TableSortLabel,Box,TextField
 import {Component} from 'react'
 import store from '../../../redux/store'
 import {ImBin} from 'react-icons/im'
-import {AiOutlineMinusCircle,AiOutlinePlusCircle} from 'react-icons/ai'
+import {Tooltip,IconButton} from '@mui/material'
+import {BsFillPencilFill,BsEyeFill} from 'react-icons/bs'
+import ProductDetail from '../../../components/ProductDetail'
+import EditDialog from './EditDialog';
 import './index.css'
 export default class AdminTable extends Component {  
-    state={selectedItems:[]}
+    state={selectedItems:[],detailDialogOpen:false,detailDialogItem:null,editDialogOpen:false,editDialogItem:null}
     AllClick=(event)=>{
         if(event.target.checked)
             this.setState({selectedItems:[...store.getState().CartReducer.cartList]})
@@ -24,31 +27,21 @@ export default class AdminTable extends Component {
         }
         
     }
+    openDetailDialog=(item)=>{
+        this.setState({detailDialogItem:item,detailDialogOpen:true});
+    }
+    closeDetailDialog=()=>{
+        this.setState({detailDialogItem:null,detailDialogOpen:false});
+    }
+    openEditDialog=(item)=>{
+        this.setState({editDialogItem:item,editDialogOpen:true});
+    }
+    closeEditDialog=()=>{
+        this.setState({editDialogItem:null,editDialogOpen:false});
+    }
     render(){
-        let tableHeader=[
-            {
-                id: 'name',
-                numeric: false,
-                label: 'Name',
-            },
-            {
-                id: 'price',
-                numeric: true,
-                label: 'price',
-            },
-            {
-                id: 'number',
-                numeric: true,
-                label: 'Number',
-            },
-            {
-                id: 'action',
-                numeric: true,
-                label: 'Action',
-            },
-           
-        ];
     return(
+        
         <TableContainer>
             <Table >
                 <TableHead>
@@ -64,7 +57,7 @@ export default class AdminTable extends Component {
                                 this.state.selectedItems.length>0?<button onClick={this.RemoveAllSelectedItemFromCart}>Remove Selected</button>:<div></div>
                             }
                         </TableCell>
-                        {tableHeader.map((headCell) => (
+                        {this.props.tableHeader.map((headCell) => (
                             <TableCell
                                 key={headCell.id}
                                 align='left'
@@ -91,18 +84,40 @@ export default class AdminTable extends Component {
                             onChange={(e)=>this.checkHandler(e,item)}
                         />
                     </TableCell>
-                    <TableCell><div><img src={`../../../../productPhoto/${item.type}/${item.subType}/${item.name}.jpg`} alt="not found"></img></div>{item.name}</TableCell>
+                    <TableCell>
+                         {item.id}
+                    </TableCell>
+                    <TableCell>
+                        <div>
+                            <img src={`../../../productPhoto/${this.props.type}/${this.props.subType}/${item.name}.jpg`} alt="not found" className="adminTable_img"></img>
+                        </div>
+                    </TableCell>
                     <TableCell>${item.price}</TableCell>
                     <TableCell>
-                        <TextField 
-                            value={item.number}
-                            onChange={(event)=>this.ItemNumChangeHandler(item,event)}
-                        />
-                        </TableCell>
+                        {item.name}
+                    </TableCell>
+                    <TableCell>
+                        {item.inventory}
+                    </TableCell>
                         <TableCell>
-                            <AiOutlineMinusCircle  size={28}/>
-                            <AiOutlinePlusCircle  size={28}/>
-                            <ImBin  size={28}/>
+                            <Tooltip title="View">
+                                <IconButton onClick={()=>this.openDetailDialog(item)}>
+                                    <BsEyeFill size={28} />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Edit">
+                                <IconButton onClick={()=>this.openEditDialog(item)}> 
+                                    <BsFillPencilFill size={28} />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Delete">
+                                <IconButton>
+                                    <ImBin  size={28}/>
+                                </IconButton>
+                            </Tooltip>
+                            
+                           
+                            
                         </TableCell>
                     </TableRow>
                     )
@@ -122,6 +137,9 @@ export default class AdminTable extends Component {
                 </TableFooter>
                 
             </Table>  
+            <ProductDetail {...this.state.detailDialogItem} type={this.props.type} subType={this.props.subType}
+             open={this.state.detailDialogOpen} openDialog={this.openDetailDialog} closeDialog={this.closeDetailDialog} /> 
+             <EditDialog open={this.state.editDialogOpen} closeDialog={this.closeEditDialog}/>
         </TableContainer>
     )}
 }

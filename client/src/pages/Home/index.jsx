@@ -1,13 +1,11 @@
 import './index.css'
 import {useState} from 'react'
-import {list_to_display_at_home} from '../../sampleData'
 import HomeProductList from '../../components/HomeProductList'
 import {FaArrowAltCircleRight} from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
 import store from '../../redux/store'
 export default function Home() {
-  const list_to_display=list_to_display_at_home;
-  
+  const list_to_display=store.getState().HomeListReducer.homeList;
   //whenever store data change,rerender whole APP by update state
   const [forceUpdate, setForceUpdate] = useState(false);
   store.subscribe(()=>{
@@ -29,7 +27,7 @@ export default function Home() {
         </div>
         <br/>
         <div className="Home_listContainer">
-          {list_to_display.map((obj)=>{
+          {list_to_display?.map((obj)=>{
               return (
                 <HomeProductList key={obj.name} {...obj}/>
               )

@@ -30,9 +30,11 @@ export default class ProductList extends Component {
     this.setState({dialogOpen:true})
   }
   addToFavour=(obj)=>{
-    obj.type=this.props.type
-    obj.subType=this.props.subType
-    store.dispatch(AddToFavour(obj))
+    let newObj={...obj}
+    newObj.type=this.props.type
+    newObj.subType=this.props.subType
+    console.log(newObj)
+    store.dispatch(AddToFavour(newObj))
   }
   removeFromFavour=(obj)=>{
     store.dispatch(RemoveFromFavour(obj))
@@ -42,20 +44,20 @@ export default class ProductList extends Component {
     store.dispatch(OpenCartDrawer(true))
   }
   addOneToCart=(item)=>{
-    item.type=this.props.type
-    item.subType=this.props.subType
-    store.dispatch(AddOneToCart({...item,number:1}))
+    let newitem={...item}
+    newitem.type=this.props.type
+    newitem.subType=this.props.subType
+    store.dispatch(AddOneToCart({...newitem,orderNum:1}))
   }
   render(){
     const {type,subType,list}=this.props;
-
      return(
         <div className="ProductList_wrapper">
           <div className="ProductList_tableless">
             {
               list?.map((obj)=>{
                 return (
-                  <Card key={obj.id} className="ProductList_card">
+                  <Card key={obj.PID} className="ProductList_card">
                     <CardMedia
                       className="ProductList_image"
                       image={`../../../productPhoto/${type}/${subType}/${obj.name}.jpg`}
@@ -82,7 +84,7 @@ export default class ProductList extends Component {
                     </Button>
                     &nbsp;&nbsp;&nbsp;
                     { 
-                      store.getState().FavourReducer.favourList.find(item => item.id===obj.id)?(
+                      store.getState().FavourReducer.favourList.find(item => item.PID===obj.PID)?(
                           <Button variant="outlined" onClick={()=>this.removeFromFavour(obj)} size="median" color="secondary">
                             <AiFillStar size={28}/>
                           </Button>
@@ -94,7 +96,7 @@ export default class ProductList extends Component {
                     }
                     &nbsp;&nbsp;&nbsp;
                     { 
-                      store.getState().CartReducer.cartList.find(item => item.id===obj.id)?(
+                      store.getState().CartReducer.cartList.find(item => item.PID===obj.PID)?(
                           <Button variant="outlined" onClick={this.openCart} size="median" color="success" >
                             <BsFillCartCheckFill size={28}/>
                           </Button>

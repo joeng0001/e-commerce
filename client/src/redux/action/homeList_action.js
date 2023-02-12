@@ -1,0 +1,1 @@
+export const initialHomeList=data=>({type:'initialHomeList',data})

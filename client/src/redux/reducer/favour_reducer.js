@@ -7,7 +7,7 @@ export default function favourReducer(preState={favourList:[],open:false},action
             return {...preState,favourList:[...preState.favourList,data]}
         case 'RemoveFromFavour':
                 return {...preState,favourList:(preState.favourList).filter((obj)=>{
-                    return obj.id!==data.id
+                    return obj.PID!==data.PID
                 })}
         default:
             return preState

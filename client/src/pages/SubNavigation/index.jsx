@@ -85,7 +85,6 @@ export default function SubNavigation() {//use functional component for using us
                     count={totalPage} 
                     page={page} color="secondary" size="large" onChange={handlePageChange} className="SubNavigation_paging" /> 
                 <ProductList type={type} subType={subType} list={list}/>
-                {/* cannot store list in state-> cannot detect param change and update component */}
             </div>
         </div>      
       );

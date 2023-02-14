@@ -59,7 +59,7 @@ export default function ProductDetail(props) {
   }
   const ItemNumChangeHandler =(event)=>{
     if(store.getState().CartReducer.cartList.findIndex((obj)=>{return obj.PID===props.PID})>-1){
-      //if already in cart,do not add item in dialog but directly in cart list
+      //if already in cart,do not add item in dialog but directly open cart list
       openCart();
       return
     }

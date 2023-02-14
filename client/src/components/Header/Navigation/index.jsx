@@ -21,7 +21,7 @@ export default class Navigation extends Component {
             {
               Object.keys(store.getState().CategoryReducer.categoryList).map((cate)=>{
                 return (
-                  <NavLink to={`/subNavigation/${cate}/new`} className="Navigation_link" onClick={this.scrollToTop}>
+                  <NavLink to={`/subNavigation/${cate}/new`} className="Navigation_link" onClick={this.scrollToTop} key={cate}>
                     {                 
                         <this.getIcon name={store.getState().CategoryReducer.iconList[cate]} />
                     }
@@ -29,9 +29,7 @@ export default class Navigation extends Component {
                 )
               })
             }
-            {/* <NavLink to="/subNavigation/food/new" className="Navigation_link" onClick={this.scrollToTop}><MdFastfood/>Food</NavLink>
-            <NavLink to="/subNavigation/toys/new" className="Navigation_link" onClick={this.scrollToTop}><MdToys/>Toys</NavLink>
-            <NavLink to="/subNavigation/others/new" className="Navigation_link" onClick={this.scrollToTop}><MdOutlineAddBox/>Others</NavLink> */}
+             <NavLink to={`/adminTable`} className="Navigation_link" >Admin</NavLink>
           </div>
       );
   }

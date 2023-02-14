@@ -10,6 +10,7 @@ import Drawer from '@mui/material/Drawer';
 import store from '../../redux/store'
 import {OpenCartDrawer} from '../../redux/action/cart_action'
 import {OpenFavourDrawer} from '../../redux/action/favour_action'
+import {GiSeaDragon} from 'react-icons/gi'
 import './index.css'
 export default class Header extends Component {
   state={direction:"right"}
@@ -29,7 +30,7 @@ export default class Header extends Component {
     return (
         <div className="Header_wrapper">
           <header className="Header_linkWrapper">
-            <Link to="/" className="Header_link" id="home"><AiFillHome/>Home</Link>
+            <Link to="/" className="Header_link" id="home"><GiSeaDragon/>Home</Link>
             <button  className="Header_link" onClick={this.openFavourDrawer}><AiFillStar/>Favourite</button>
             <button  className="Header_link" onMouseEnter={this.openCartDrawer}><AiOutlineShoppingCart/>Shopping List</button>
 

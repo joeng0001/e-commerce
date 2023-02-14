@@ -1,10 +1,12 @@
 import './index.css'
 import React from 'react'
 import { Drawer } from '@mui/material';
-import {subNavigationList} from '../../../sampleData'
+//import {subNavigationList} from '../../../sampleData'
 import {Menu,MenuItem,Card} from '@mui/material'
+import store from '../../../redux/store';
 export default function LeftDrawer(props) {
   const [type, setType] = React.useState(props.currType);
+  const subNavigationList=store.getState().CategoryReducer.categoryList;
   return (
         <Drawer
             variant="permanent"
@@ -21,7 +23,7 @@ export default function LeftDrawer(props) {
                 {
                     Object.keys(subNavigationList).map((type)=>{
                         return (
-                            <div key={subNavigationList[type].id}>
+                            <div key={type}>
                                 <Card
                                     onClick={event=>{
                                         props.typeClick(event);
@@ -47,7 +49,7 @@ export default function LeftDrawer(props) {
             >
                 {
                     subNavigationList[type]?.map((subtype)=>{
-                        return  <MenuItem onClick={(e)=>props.subTypeChange(e,type)} >{subtype.name}</MenuItem>
+                        return  <MenuItem onClick={(e)=>props.subTypeChange(e,type)} key={subtype}>{subtype}</MenuItem>
                     })
                 }
                 

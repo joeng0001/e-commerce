@@ -21,7 +21,7 @@ export default class AdminTable extends Component {
             this.setState({selectedItems:[...this.state.selectedItems,item]})
         }else{
             let newSelectedItemsList=this.state.selectedItems.filter((obj)=>{
-                return obj.id!==item.id
+                return obj.PID!==item.PID
             })
             this.setState({selectedItems:newSelectedItemsList})
         }
@@ -76,16 +76,16 @@ export default class AdminTable extends Component {
                 <TableBody>
                 {this.props.displayList.map((item)=>{
                     return (
-                    <TableRow key={item.id}>
+                    <TableRow key={item.PID}>
                     <TableCell padding="checkbox">
                         <Checkbox
                             color="primary"
-                            checked={this.state.selectedItems.findIndex((obj)=>{return obj.id===item.id})>-1}
+                            checked={this.state.selectedItems.findIndex((obj)=>{return obj.PID===item.PID})>-1}
                             onChange={(e)=>this.checkHandler(e,item)}
                         />
                     </TableCell>
                     <TableCell>
-                         {item.id}
+                         {item.PID}
                     </TableCell>
                     <TableCell>
                         <div>
@@ -97,7 +97,7 @@ export default class AdminTable extends Component {
                         {item.name}
                     </TableCell>
                     <TableCell>
-                        {item.inventory}
+                        {parseInt(item.inventory)}
                     </TableCell>
                         <TableCell>
                             <Tooltip title="View">
@@ -139,7 +139,7 @@ export default class AdminTable extends Component {
             </Table>  
             <ProductDetail {...this.state.detailDialogItem} type={this.props.type} subType={this.props.subType}
              open={this.state.detailDialogOpen} openDialog={this.openDetailDialog} closeDialog={this.closeDetailDialog} /> 
-             <EditDialog open={this.state.editDialogOpen} closeDialog={this.closeEditDialog}/>
+             <EditDialog item={this.state.editDialogItem} open={this.state.editDialogOpen} closeDialog={this.closeEditDialog}/>
         </TableContainer>
     )}
 }

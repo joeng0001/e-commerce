@@ -8,27 +8,26 @@ import {
 import routes from './route'
 import store from './redux/store';
 import {initialItemList} from '../src/redux/action/item_action'
-import {initialCategoryList,initialIconList} from '../src/redux/action/category_action'
+import {initialCategoryList,initialCIDList,initialIconList} from '../src/redux/action/category_action'
 import { initialHomeList } from './redux/action/homeList_action';
+import axios_service from './axios_service'
 function App() {
   const route=useRoutes(routes);
   const [loading,setLoading]=useState(true);
   const initiation=async ()=>{
         let categories;
-         await fetch('http://52.192.59.69/server.php/category_getList', {
-        })
-        .then((res) => res.json())
-        .then((res) => categories=res.data)
-        .then(()=>{
-          fetch('http://52.192.59.69/server.php/product_getList')
-          .then((res) => res.json())
-          .then((res) => {
+        //let CIDPair={};
+        await axios_service.get_categoryList()
+          .then(res => categories=res.data)
+          .catch(e=>console.log(e))
+        await axios_service.get_productList()
+          .then(res => {
               const items=res.data;
               const items_list_with_type_subtype_property={};
               const category_list={};
               const icon_list={};
               categories.map((cate)=>{
-                console.log(cate)
+                //CIDPair[cate.CID]=cate.NAME;
                 items_list_with_type_subtype_property[cate.NAME]={};
                 let subCateList=cate.subCategories.split(",");
                 category_list[cate.NAME]=subCateList;
@@ -41,29 +40,24 @@ function App() {
                 item.category=categories.find((cate)=>cate.CID===item.CID)?.NAME
                 items_list_with_type_subtype_property[item.category][item.subCategory].push(item)
               })
-              console.log("in fetch,cate list is",category_list)
-              console.log("in fetch,icon list is",icon_list)
               store.dispatch(initialIconList(icon_list))
               store.dispatch(initialCategoryList(category_list))
               store.dispatch(initialItemList(items_list_with_type_subtype_property))
+              store.dispatch(initialCIDList(categories))
+            })
+          .catch(e=>console.log(e))
+        await axios_service.get_homeList()
+          .then((res)=>{
+            const homeList=res.data;
+            let list=[];
+            homeList.map((o)=>{
+              let obj={'name':o.name,'id':o.CID,'value':o.value.split(",")}
+              list.push(obj);
+            })
+            store.dispatch(initialHomeList(list))
           })
-        })  
-        await fetch('http://52.192.59.69/server.php/homeList_getList')
-        .then((res) => res.json())
-        .then((res) => {
-          const homeList=res.data;
-          let list=[];
-          homeList.map((o)=>{
-            let obj={};
-            obj['name']=o.name
-            obj['id']=o.CID;
-            obj['value']=o.value.split(",");
-            list.push(obj);
-          })
-           store.dispatch(initialHomeList(list))
-        })
-        setLoading(false);
-        //until all the initiation done,start render page
+          .catch(e=>console.log(e))
+        setLoading(false);  
     }
     useEffect(()=>{
       initiation()
@@ -71,16 +65,17 @@ function App() {
   return (
     <div>
       {loading?
-            <h2>Loading...</h2>:<>
-      <Header />
-        <div className="content_wrapper">
-          
-            <Suspense fallback={<h2>Loading...</h2>}> 
-              {route}  
-            </Suspense>     
-          
-        </div>
-      <Footer/>
+      <h2>Loading...</h2>:
+      <>
+        <Header />
+          <div className="content_wrapper">
+            
+              <Suspense fallback={<h2>Loading...</h2>}>
+                {route}  
+              </Suspense>     
+            
+          </div>
+        <Footer/>
       </>
   }
     </div>    

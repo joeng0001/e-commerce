@@ -1,3 +1,38 @@
 .EditDialog_title{
     font-size:28px;
 }
+.EditDialog_formComponent{
+    margin:10px;
+}
+.EditDialog_imgPreview{
+    width:200px;
+    height:200px;
+}
+.EditDialog_imgUploadArea{
+    border:1px grey dotted;
+    width:200;
+    height:200px;
+    justify-content: center;
+    align-items: center;
+}
+.EditDialog_imgInput{
+    visibility: hidden;
+    width:0px;
+}
+.EditDialog_contentWrapper{
+    display:flex;
+}
+.EditDialog_leftContent{
+    width:50%;
+    border:1px black solid;
+    padding:20px;
+}
+.EditDialog_rightContent{
+    width:50%;
+    margin-left:10px;
+    border:1px green solid;
+    padding:20px;
+}
+.EditDialog_description{
+    margin:10px;
+}

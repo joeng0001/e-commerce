@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
 import store from '../../redux/store'
 import {AddToFavour,RemoveFromFavour} from '../../redux/action/favour_action'
 import {AddOneToCart,OpenCartDrawer} from '../../redux/action/cart_action'
-
+import imageURL from '../../imageURL';
 
 export default class ProductList extends Component {
   
@@ -60,7 +60,7 @@ export default class ProductList extends Component {
                   <Card key={obj.PID} className="ProductList_card">
                     <CardMedia
                       className="ProductList_image"
-                      image={`../../../productPhoto/${type}/${subType}/${obj.name}.jpg`}
+                      image={`${imageURL}/${obj.PID}`}
                       onClick={()=>this.openDialog(obj)}
                     />
                     <CardContent>

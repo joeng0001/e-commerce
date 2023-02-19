@@ -19,7 +19,6 @@ export default function LeftDrawer(props) {
             className="drawer"
         >
             <div className="drawer_ContentWrapper">
-                <div>this is drawer content</div>
                 {
                     Object.keys(subNavigationList).map((type)=>{
                         return (

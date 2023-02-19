@@ -41,7 +41,7 @@ export default class CartTable extends Component {
         this.setState({selectedItems:newList})
     }
     ItemNumChangeHandler=(item,event)=>{
-        if(isNaN(event.target.value*1)||event.target.value.trim()===''||event.target.value*1>99){//filter non number input and no more than 99 items at a time
+        if(isNaN(event.target.value*1)||event.target.value.trim()===''||event.target.value*1>99||event.target.value*1<=0){//filter non number input and no more than 99/less than 0 items at a time
             return
         }
         let newItem={...item,orderNum:event.target.value*1}

@@ -12,6 +12,7 @@ import './index.css'
 import store from '../../redux/store';
 import {AddToFavour,RemoveFromFavour} from '../../redux/action/favour_action'
 import {OpenCartDrawer,DirectSetNumToCart} from '../../redux/action/cart_action'
+import imageURL from '../../imageURL';
 
 export default function ProductDetail(props) {
   const [product_cnt, setproduct_cnt] = React.useState(1);
@@ -81,7 +82,7 @@ export default function ProductDetail(props) {
           <DialogContent className="ProductDetail_centent">
             <img
               className="ProductDetail_img"
-              src={`../../../productPhoto/${props.type}/${props.subType}/${props.name}.jpg`}
+              src={`${imageURL}/${props.PID}`}
               alt="match not found"  
             />
             <DialogContent className="ProductDetail_rightContainer">

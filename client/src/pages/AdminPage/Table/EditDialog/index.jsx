@@ -1,28 +1,32 @@
-import {Dialog,DialogTitle,DialogContent,DialogActions,Button,FormControl,Input,FormHelperText,TextField,MenuItem} from '@mui/material';
+import {Dialog,DialogTitle,DialogContent,DialogActions,Button,FormControl,FormHelperText,TextField,MenuItem} from '@mui/material';
 import { useState ,useEffect,useRef} from 'react';
-import axios_service from '../../../../axios_service'
 import store from '../../../../redux/store';
+import imageURL from '../../../../imageURL'
 import './index.css'
 export default function EditDialog(props){
-    const [file, setFile] = useState(null);
+    const [fileURL, setFileURL] = useState(`${imageURL}/${props.item?.PID}`);
+    const [file,setFile]=useState(null)
     const [imgName,setImgName]=useState('not selected');
     //props item cannot be modofied->create item instance to store data
     const [item,setItem]=useState(props.item);
-    
+    const ref=useRef()
     const CIDList=store.getState().CategoryReducer.CIDList
-    const [subTypeList,setSubTypeList]=useState(item?.category?CIDList.find(obj=>obj.NAME===item.category)?.subCategories.split(","):
+    const [subTypeList,setSubTypeList]=useState(item?.category?CIDList.find(obj=>obj.NAME===item.category)?.subCategories?.split(","):
         CIDList[0]?.subCategories.split(","))
     const fileSelect=(e)=> {
         if(e.target.files){
             setImgName(e.target.files[0]?.name)
-            setFile(URL.createObjectURL(e.target.files[0]));
+            setFileURL(URL.createObjectURL(e.target.files[0]));
+            setFile(e.target.files[0])
         }
         
     }
     const fileUpdate=(e)=> {
         e.preventDefault();
         if(e.dataTransfer.files){
-            setFile(URL.createObjectURL(e.dataTransfer.files[0]));   
+            setImgName(e.dataTransfer.files[0]?.name)
+            setFileURL(URL.createObjectURL(e.dataTransfer.files[0]));   
+            setFile(e.target.files[0])
         }
         
     }
@@ -30,19 +34,19 @@ export default function EditDialog(props){
         e.preventDefault();
     }
     const btnClickHanlder=()=>{
-        //ref can't be use for click()
-        var s=document.getElementById('input')
-        s.click();
+        ref.current.click()
     }
     const submitHandler=()=>{
-        const data=item
-        axios_service.update_to_productList(data)
-        .then((res)=>{
-            console.log(res)
-        })
-        .catch((e)=>{
-            console.log(e)
-        })
+        const data={...item}
+        console.log("data is",data)
+        if(props.submitHandler(data,file)){
+            //if return true=>success update
+            //reset image
+            //item will be auto reset in new props.item editing
+            setFileURL(null)
+            setFile(null)
+            setImgName('not selected')
+        }
         
     }
     const inputHandler=(e,type)=>{
@@ -51,12 +55,13 @@ export default function EditDialog(props){
          if(type==='category'&&e.target.value!==item?.category){
             //if category change,reset subCategory to the first subCategory of the category 
             newItem['subCategory']=CIDList.find(obj=>obj.NAME===e.target.value)?.subCategories.split(",")[0]
+            newItem['CID']=CIDList.find(obj=>obj.NAME===e.target.value)?.CID
         }
         newItem[type]=e.target.value
         setItem(newItem)
     }
     const cleanState=()=>{
-        setFile(null);
+        setFileURL(null);
         setItem(null);
         setImgName('not selected');
     }
@@ -65,14 +70,17 @@ export default function EditDialog(props){
      useEffect(()=>{
        setItem(props.item)
        if(props.item?.category){
-         setSubTypeList(CIDList.find(obj=>obj.NAME===props.item.category)?.subCategories.split(","))
+         setFileURL(`${imageURL}/${props.item?.PID}`)
+         setSubTypeList(CIDList.find(obj=>obj.NAME===props.item.category)?.subCategories?.split(","))
        }else{
-            setSubTypeList(CIDList[0]?.subCategories.split(","))
+            setItem({...props.item,category:CIDList[0]?.NAME,subCategory:CIDList[0]?.subCategories.split(",")[0]})
+            setFileURL(null)
+            setSubTypeList(CIDList[0]?.subCategories?.split(","))
        }
        return ()=>{
         cleanState();
        }
-    },[props.item])
+    },[props.item,CIDList])
     return(
         <Dialog
           open={props.open}
@@ -88,18 +96,19 @@ export default function EditDialog(props){
                         <FormControl className="EditDialog_leftContent">
                             <Button variant='contained' onClick={btnClickHanlder} className="EditDialog_formComponent" >
                                 Click to upload file
-                                <Input id='input' type='file' onChange={(e)=>fileSelect(e)} className="EditDialog_imgInput"/>
+                                <input  ref={ref} type='file' accept="image/png,image/gif,image/jpg"  onChange={(e)=>fileSelect(e)} className="EditDialog_imgInput"/>
                             </Button>
                             <img
                                 onDrop={(e)=>fileUpdate(e)}//handle file upload
                                 onDragOver={e=>fileDragOver(e)} //prevent browser auto open file while drag event trigger
                                 className="EditDialog_imgUploadArea"
-                                src={file}
+                                src={fileURL}
                                 alt=" or drag and drop your file here"
                             >      
                             </img>
                             <FormHelperText >{imgName}</FormHelperText>
                             <TextField required={true} label="Name" variant="outlined" className="EditDialog_formComponent" onChange={(e)=>inputHandler(e,'name')} defaultValue={props.item?.name}/>
+                            <TextField required={true} label="PrevPrice" variant="outlined" className="EditDialog_formComponent" onChange={(e)=>inputHandler(e,'prevPrice')} defaultValue={props.item?.prevPrice}/>
                             <TextField required={true} label="Price" variant="outlined" className="EditDialog_formComponent" onChange={(e)=>inputHandler(e,'price')} defaultValue={props.item?.price}/>
                             <TextField required={true} label="Stock" variant="outlined" className="EditDialog_formComponent" onChange={(e)=>inputHandler(e,'inventory')} defaultValue={props.item?.inventory}/>
                             
@@ -111,7 +120,7 @@ export default function EditDialog(props){
                             <TextField
                                 select
                                 label="Type"
-                                value={item?.category?item?.category:CIDList[0]?.NAME}
+                                value={item?.category||CIDList[0]?.NAME}
                                 helperText="Please select type"
                                 onChange={(e)=>{
                                     inputHandler(e,'category')
@@ -129,7 +138,7 @@ export default function EditDialog(props){
                             <TextField
                                 select
                                 label="Subtype"
-                                value={item?.subCategory?item?.subCategory:'new'}
+                                value={item?.subCategory?item?.subCategory:CIDList[0]?.subCategories.split(",")[0]}
                                 helperText="Please select subtype"
                                 onChange={(e)=>{
                                     inputHandler(e,'subCategory')
@@ -147,6 +156,7 @@ export default function EditDialog(props){
                                     
                                     }
                             </TextField>
+                            <TextField required={true} label="comeFrom" variant="outlined" className="EditDialog_formComponent" onChange={(e)=>inputHandler(e,'comeFrom')} defaultValue={props.item?.comeFrom}/>
                         </FormControl>
                 </DialogContent>
                 

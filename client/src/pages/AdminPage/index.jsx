@@ -3,34 +3,25 @@ import React from 'react'
 import Drawer from './Drawer'
 import AdminTable from './Table'
 import ButtonList from './ButtonList'
-import {productList} from '../../sampleData'
-import {useState} from 'react'
 import store from '../../redux/store'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams} from 'react-router-dom'
 export default function AdminPage() {
     //this component manage most of the state of drawer and table
     //so that drawer and table can pass data through this component
-    const [forceUpdate, setForceUpdate] = useState(false);
-    store.subscribe(()=>{
-        setForceUpdate(!forceUpdate)
-    })
     const [search,setSearch]=useSearchParams();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    //const [currType, setcurrType] = React.useState('food');
-    // console.log(store.getState().CategoryReducer.CIDList.find(obj=>obj.CID===search.get('cid')))
     const [currType, setcurrType] = React.useState(//set the type according to query cid
                 store.getState().CategoryReducer.CIDList.find(obj=>obj.CID===search.get('cid'))?
-                store.getState().CategoryReducer.CIDList.find(obj=>obj.CID===search.get('cid')).NAME:
-                ()=>{
-                    //if type not found,i.e. cid not exist,reset to 1 and take the first type for rendering
-                    setSearch('cid=1')
-                    return store.getState().CategoryReducer.CIDList[0]?.NAME  
-                });
-    //const [currSubType, setcurrSubType] = React.useState('new');
-    const [currSubType, setcurrSubType] = React.useState(store.getState().CategoryReducer.CIDList.find(obj=>obj.CID===search.get('cid')).subCategories.split(",")[0]);
+                store.getState().CategoryReducer.CIDList.find(obj=>obj.CID===search.get('cid'))?.NAME:
+                store.getState().CategoryReducer.CIDList[0]?.NAME)
+    const [currSubType, setcurrSubType] = React.useState(store.getState().CategoryReducer.CIDList.find(obj=>obj.NAME===currType)?.subCategories?.split(",")[0]);
     const [displayList,setDisplayList]=React.useState(store.getState().ItemReducer.itemList[currType][currSubType]?.slice(0,5));
     const [tablePage,setTablePage]=React.useState(0);
     const [tableRowsNum,setTableRowsNum]=React.useState(5);
+    store.subscribe(()=>{
+        setcurrSubType(store.getState().CategoryReducer.CIDList.find(obj=>obj.NAME===currType)?.subCategories?.split(",")[0])
+        setDisplayList(store.getState().ItemReducer.itemList[currType][currSubType]?.slice(0,5))
+    })
     const tableHeader=[
             {   id:'id',
                 numeric:true,
@@ -77,7 +68,8 @@ export default function AdminPage() {
         setcurrSubType(event.target.textContent)
         setDisplayList(store.getState().ItemReducer.itemList[type][event.target.textContent]?.slice(0,tableRowsNum))
         setTablePage(0)
-        setSearch('cid=1')
+        const CID=store.getState().CategoryReducer.CIDList.find(obj=>obj.NAME===type)?.CID
+        setSearch(`cid=${CID?CID:1}`)
     }
     const tablePageChange=(event,newpage)=>{
         setTablePage(newpage)
@@ -93,7 +85,7 @@ export default function AdminPage() {
             <ButtonList />
             <div className="Admin_page">
                 <Drawer  anchorEl={anchorEl} currType={currType} open={open} typeClick={typeClick} subTypeChange={subTypeChange} closeMenu={closeMenu}/>
-                <div className="dashBoard">this is the dashboard
+                <div className="dashBoard">
                 <AdminTable displayList={displayList} listLength={store.getState().ItemReducer.itemList[currType][currSubType]?store.getState().ItemReducer.itemList[currType][currSubType]?.length:1} tablePage={tablePage}
                 tableRowsNum={tableRowsNum} tablePageChange={tablePageChange} tableRowsChange={tableRowsChange} type={currType} subType={currSubType} tableHeader={tableHeader}/>
                 </div>

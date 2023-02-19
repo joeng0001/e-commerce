@@ -12,6 +12,7 @@ import {initialCategoryList,initialCIDList,initialIconList} from '../src/redux/a
 import { initialHomeList } from './redux/action/homeList_action';
 import axios_service from './axios_service'
 function App() {
+  let data;
   const route=useRoutes(routes);
   const [loading,setLoading]=useState(true);
   const initiation=async ()=>{
@@ -26,17 +27,18 @@ function App() {
               const items_list_with_type_subtype_property={};
               const category_list={};
               const icon_list={};
-              categories.map((cate)=>{
+              categories.forEach((cate)=>{
                 //CIDPair[cate.CID]=cate.NAME;
                 items_list_with_type_subtype_property[cate.NAME]={};
                 let subCateList=cate.subCategories.split(",");
                 category_list[cate.NAME]=subCateList;
                 icon_list[cate.NAME]=cate.NavListIcon;
-                subCateList.map((subCate)=>{
+                subCateList.forEach((subCate)=>{
                   items_list_with_type_subtype_property[cate.NAME][subCate]=[];
                 })
               })
-              items.map((item)=>{
+              items.forEach((item)=>{
+                item.inventory=parseInt(item.inventory)
                 item.category=categories.find((cate)=>cate.CID===item.CID)?.NAME
                 items_list_with_type_subtype_property[item.category][item.subCategory].push(item)
               })
@@ -44,13 +46,14 @@ function App() {
               store.dispatch(initialCategoryList(category_list))
               store.dispatch(initialItemList(items_list_with_type_subtype_property))
               store.dispatch(initialCIDList(categories))
+              
             })
           .catch(e=>console.log(e))
         await axios_service.get_homeList()
           .then((res)=>{
             const homeList=res.data;
             let list=[];
-            homeList.map((o)=>{
+            homeList.forEach((o)=>{
               let obj={'name':o.name,'id':o.CID,'value':o.value.split(",")}
               list.push(obj);
             })
@@ -72,6 +75,10 @@ function App() {
             
               <Suspense fallback={<h2>Loading...</h2>}>
                 {route}  
+                {/* <img
+                src="http://localhost:3000/c5405b54-29b7-462c-8553-21517238cfed"
+                alt="not found"
+                /> */}
               </Suspense>     
             
           </div>

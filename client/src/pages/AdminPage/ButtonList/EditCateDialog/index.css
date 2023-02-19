@@ -1,0 +1,10 @@
+.EditCateDialog_title{
+    font-size:28px;
+}
+.EditCateDialog_selectField{
+    margin:20px;
+}
+.EditCateDialog_dialogContent{
+    display:flex;
+    flex-direction: column;
+}

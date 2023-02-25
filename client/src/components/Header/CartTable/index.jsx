@@ -5,8 +5,10 @@ import {AddOneToCart,DirectSetNumToCart,RemoveOneFromCart,RemoveAllFromCart} fro
 import {ImBin} from 'react-icons/im'
 import {AiOutlineMinusCircle,AiOutlinePlusCircle} from 'react-icons/ai'
 import ProductDetail from '../../ProductDetail';
+import imageURL from '../../../imageURL'
 import './index.css'
 export default class CartTable extends Component {  
+    //table component inside the Cart Drawer
     state={selectedItems:[],dialogItem:null,dialogOpen:false}
     AllClick=(event)=>{
         if(event.target.checked)
@@ -134,7 +136,7 @@ export default class CartTable extends Component {
                     </TableCell>
                     <TableCell>
                         <div>
-                            <img src={`../../../../productPhoto/${item.type}/${item.subType}/${item.name}.jpg`} alt="not found" 
+                            <img src={`${imageURL}/${item?.PID}`} alt="not found" 
                             className="CartTable_itemImg" onClick={()=>this.openDialog(item)}></img>
                         </div>
                         {item.name}

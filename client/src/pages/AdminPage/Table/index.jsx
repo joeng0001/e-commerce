@@ -16,14 +16,15 @@ export default class AdminTable extends Component {
     state={selectedItems:[],detailDialogOpen:false,detailDialogItem:null,editDialogOpen:false,editDialogItem:null,
     openSuccessSnackBar:false,successSnackBarMessage:"",openFailSnackBar:false,failSnackBarMessage:false}
     AllClick=(event)=>{
+        //add all item to the selectedItems list or empty the selectedItems list
         if(event.target.checked)
             this.setState({selectedItems:[...this.props.displayList]})
         else
             this.setState({selectedItems:[]})  
     }
     fetchData=async()=>{
+        //fetch all data after update,and save to store
         let categories;
-        //let CIDPair={};
         await axios_service.get_categoryList()
           .then(res => categories=res.data)
           .catch(e=>console.log(e))
@@ -34,7 +35,6 @@ export default class AdminTable extends Component {
               const category_list={};
               const icon_list={};
               categories.forEach((cate)=>{
-                //CIDPair[cate.CID]=cate.NAME;
                 items_list_with_type_subtype_property[cate.NAME]={};
                 let subCateList=cate.subCategories.split(",");
                 category_list[cate.NAME]=subCateList;
@@ -68,6 +68,7 @@ export default class AdminTable extends Component {
           .catch(e=>console.log(e))
     }
     checkHandler=(event,item)=>{
+        //add select item to selectedList or remove it from the list
         if(event.target.checked){
             this.setState({selectedItems:[...this.state.selectedItems,item]})
         }else{
@@ -79,49 +80,74 @@ export default class AdminTable extends Component {
         
     }
     openDetailDialog=(item)=>{
+        //set item to display in dialog and open the dialog
         this.setState({detailDialogItem:item,detailDialogOpen:true});
     }
     closeDetailDialog=()=>{
+        //clean item to display in dialog and close it
         this.setState({detailDialogItem:null,detailDialogOpen:false});
     }
     openEditDialog=(item)=>{
+        //set item to display in the edit dialog and open the dialog
         this.setState({editDialogItem:item,editDialogOpen:true});
     }
     closeEditDialog=()=>{
+        //close the item to display in edit Dialog and close dialog
         this.setState({editDialogItem:null,editDialogOpen:false});
     }
     closeSuccessSnackBar=()=>{
+        //pclose success snack bar after displaying success message
         this.setState({openSuccessSnackBar:false});
     }
     closeFailSnackBar=()=>{
+        //close fail snack bar after displaying failure message
         this.setState({openFailSnackBar:false});
     }
     checking=(item,image)=>{
-    //this checking function not included image->can leave as default
-    let alert_msg="";
+    //perform simple checking before sending request to server
+    //not included image->can leave as default while updating an product
+    let missing_msg="",format_msg="",size_msg="";
     if(!item.name)
-      alert_msg+="Name "
+      missing_msg+="Name "
     if(!item.prevPrice)
-      alert_msg+="PrevPirce "
+      missing_msg+="PrevPirce "
     if(!item.price)
-      alert_msg+="Price "
+      missing_msg+="Price "
     if(!item.inventory)
-      alert_msg+="Stock "
+      missing_msg+="Stock "
     if(!item.description)
-      alert_msg+="Description "
+      missing_msg+="Description "
     if(!item.comeFrom)
-      alert_msg+="Comefrom "
-    return alert_msg
+      missing_msg+="Comefrom "
+    if(missing_msg)
+        missing_msg+="missing! "
+    if(!(/^-?[0-9]+([.,][0-9]+)?$/.test(item.price)&&(/^-?[0-9]+([.,][0-9]+)?$/.test(item.prevPrice))))
+        format_msg+="price "
+    if(!(/^\d+$/.test(item.inventory)))
+        format_msg+="inventory "
+    if(!(/^[A-Za-z]+$/).test(item.name))
+        format_msg+="name "
+    if(!(/^[A-Za-z]+$/).test(item.ComeFrom))
+        format_msg+="comeFrom "
+    if(!(/^[a-zA-Z ]*$/.test(item.Descrition)))
+        format_msg+="Description "
+    if(format_msg)
+        format_msg+="format not correct! "
+    if(image?.size>5240880)
+        size_msg="image too big,pls upload size below 5MB"
+    return missing_msg+" "+format_msg+size_msg
   }
     submitHandler=(data,image)=>{
-        console.log("receiving data",data)
+        //handler of submission
+        //construct an item and perform checking
         let item={...data}
         let check_res=this.checking(item,image)
-        if(check_res!==""){
-            this.setState({openFailSnackBar:true,failSnackBarMessage:`Insert Failed => ${check_res}missing`})
-            return false
+        if(check_res!==" "){
+            //if fail to pass checking,display the message and return
+            this.setState({openFailSnackBar:true,failSnackBarMessage:`Insert Failed => ${check_res}`})
+            return
         }
-        let insert_res=false;//flag to told Dialog whether it should empty the image field
+        //after passing checking,construct a Form with all properties of the item
         let form=new FormData();
         Object.keys(item).forEach((key)=>{
             form.append(key,data[key])
@@ -129,154 +155,155 @@ export default class AdminTable extends Component {
         if(image){
             form.append('file',image,image?.name)
         }
-        
+        //send the form to server via axios
         axios_service.update_to_productList(form)
-        .then(async(res)=>{
-            console.log("receive res",res.data)
-            this.setState({openSuccessSnackBar:true,successSnackBarMessage:"success insert"})
+        .then(async (res)=>{
+            //if success,display success message,close editing dialog,and fetch data for update 
+            this.setState({openSuccessSnackBar:true,successSnackBarMessage:res.data})
             this.closeEditDialog();
             await this.fetchData();
-            insert_res=true;
         })
         .catch((e)=>{
-            console.log(e)
-            this.setState({openFailSnackBar:true,failSnackBarMessage:`Insert Failed`})
-            insert_res=false;
+            //if fail,display the failure message
+            this.setState({openFailSnackBar:true,failSnackBarMessage:e.response.data})
         })
-        return insert_res;
+        return 
     }
     deleteItem=(item)=>{
+        //handler of deletion
+        //confirm delete operation
         if(!window.confirm('delete it?'))
             return
-        console.log("deleting item",item )
+        //construct a form with CID
         let form=new FormData();
         form.append('PID',item?.PID)
+        //send via axios
         axios_service.delete_from_productList(form)
-        .then((res)=>{
-            console.log("receive res",res.data)
-            this.setState({openSuccessSnackBar:true,successSnackBarMessage:"success delete"})
-            this.fetchData();
+        .then(async (res)=>{
+            //display success message and fetch data for update
+            this.setState({openSuccessSnackBar:true,successSnackBarMessage:res.data})
+            await this.fetchData();
 
         })
         .catch((e)=>{
-            this.setState({openFailSnackBar:true,failSnackBarMessage:"fail to delete"})
-            console.log(e)
+            //if fail,display failure message
+            this.setState({openFailSnackBar:true,failSnackBarMessage:e.response.data})
         })
     }
     render(){
-        const vertical='top',horizontal='center'
-    return(
-        <>
-        <TableContainer>
-            <Table >
-                <TableHead>
-                    <TableRow>
+        const vertical='top',horizontal='center'//position param of success/failure snackBar
+        return(
+            <>
+            <TableContainer>
+                <Table >
+                    <TableHead>
+                        <TableRow>
+                            <TableCell padding="checkbox">
+                                <Checkbox
+                                    color="primary"
+                                    checked={this.state.selectedItems.length===this.props.listLength}
+                                    onChange={(e)=>this.AllClick(e)}
+                                />
+                                {
+                                    this.state.selectedItems.length>0?<button>Remove Selected</button>:<div></div>
+                                }
+                            </TableCell>
+                            {this.props.tableHeader.map((headCell) => (
+                                <TableCell
+                                    key={headCell.id}
+                                    align='left'
+                                >
+                                <TableSortLabel
+                                    active={false}
+                                    direction={false? 'asc': 'asc'}
+                                >
+                                    {headCell.label}
+                                    {true? (<Box component="span"></Box>) : null}
+                                </TableSortLabel> 
+                                </TableCell>
+                            ))} 
+                        </TableRow>
+                    </TableHead>   
+                    <TableBody>
+                    {this.props.displayList?.map((item)=>{
+                        return (
+                        <TableRow key={item.PID}>
                         <TableCell padding="checkbox">
                             <Checkbox
                                 color="primary"
-                                checked={this.state.selectedItems.length===this.props.listLength}
-                                onChange={(e)=>this.AllClick(e)}
+                                checked={this.state.selectedItems.findIndex((obj)=>{return obj.PID===item.PID})>-1}
+                                onChange={(e)=>this.checkHandler(e,item)}
                             />
-                            {
-                                this.state.selectedItems.length>0?<button>Remove Selected</button>:<div></div>
-                            }
                         </TableCell>
-                        {this.props.tableHeader.map((headCell) => (
-                            <TableCell
-                                key={headCell.id}
-                                align='left'
-                            >
-                            <TableSortLabel
-                                active={false}
-                                direction={false? 'asc': 'asc'}
-                            >
-                                {headCell.label}
-                                {true? (<Box component="span"></Box>) : null}
-                            </TableSortLabel> 
-                            </TableCell>
-                        ))} 
-                    </TableRow>
-                </TableHead>   
-                <TableBody>
-                {this.props.displayList?.map((item)=>{
-                    return (
-                    <TableRow key={item.PID}>
-                    <TableCell padding="checkbox">
-                        <Checkbox
-                            color="primary"
-                            checked={this.state.selectedItems.findIndex((obj)=>{return obj.PID===item.PID})>-1}
-                            onChange={(e)=>this.checkHandler(e,item)}
-                        />
-                    </TableCell>
-                    <TableCell>
-                         {item.PID}
-                    </TableCell>
-                    <TableCell>
-                        <div>
-                            {/* <img src={`../../../productPhoto/${this.props.type}/${this.props.subType}/${item.name}.jpg`} alt="not found" className="adminTable_img"></img> */}
-                            <img src={`${imageURL}/${item.PID}`} alt="not found" className="adminTable_img"></img>
-                        </div>
-                    </TableCell>
-                    <TableCell>${item.price}</TableCell>
-                    <TableCell>
-                        {item.name}
-                    </TableCell>
-                    <TableCell>
-                        {parseInt(item.inventory)}
-                    </TableCell>
                         <TableCell>
-                            <Tooltip title="View">
-                                <IconButton onClick={()=>this.openDetailDialog(item)}>
-                                    <BsEyeFill size={28} />
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Edit">
-                                <IconButton onClick={()=>this.openEditDialog(item)}> 
-                                    <BsFillPencilFill size={28} />
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Delete">
-                                <IconButton onClick={()=>{this.deleteItem(item)}}>
-                                    <ImBin  size={28}/>
-                                </IconButton>
-                            </Tooltip>
-                            
-                           
-                            
+                            {item.PID}
                         </TableCell>
-                    </TableRow>
-                    )
-                })}
-                </TableBody>
-                <TableFooter>
-                    <TableRow>
-                        <TablePagination
-                            rowsPerPageOptions={[5, 10, 15]}
-                            count={this.props.listLength}
-                            rowsPerPage={this.props.tableRowsNum}
-                            page={this.props.tablePage}
-                            onPageChange={(e,newpage)=>this.props.tablePageChange(e,newpage)}
-                            onRowsPerPageChange={(e)=>this.props.tableRowsChange(e)}
-                        />
-                    </TableRow>
-                </TableFooter>
-                
-            </Table>  
-            <ProductDetail {...this.state.detailDialogItem} type={this.props.type} subType={this.props.subType}
-             open={this.state.detailDialogOpen} openDialog={this.openDetailDialog} closeDialog={this.closeDetailDialog} /> 
-             <EditDialog submitHandler={this.submitHandler}  item={this.state.editDialogItem} open={this.state.editDialogOpen} closeDialog={this.closeEditDialog}/>
-                
-        </TableContainer>
-        <Snackbar open={this.state.openSuccessSnackBar} autoHideDuration={9000} onClose={this.closeSuccessSnackBar} anchorOrigin={{vertical , horizontal}}>
-                <Alert onClose={this.closeSuccessSnackBar} severity="success" sx={{ width: '100%' }}>
-                    {this.state.successSnackBarMessage}
-                </Alert>
-            </Snackbar>
-            <Snackbar open={this.state.openFailSnackBar} autoHideDuration={9000} onClose={this.closeFailSnackBar} anchorOrigin={{vertical , horizontal}}>
-                <Alert onClose={this.closeFailSnackBar} severity="error" >
-                    {this.state.failSnackBarMessage}
-                </Alert>
-            </Snackbar>
-        </>
+                        <TableCell>
+                            <div>
+                                {/* <img src={`../../../productPhoto/${this.props.type}/${this.props.subType}/${item.name}.jpg`} alt="not found" className="adminTable_img"></img> */}
+                                <img src={`${imageURL}/${item.PID}`} alt="not found" className="adminTable_img"></img>
+                            </div>
+                        </TableCell>
+                        <TableCell>${item.price}</TableCell>
+                        <TableCell>
+                            {item.name}
+                        </TableCell>
+                        <TableCell>
+                            {parseInt(item.inventory)}
+                        </TableCell>
+                            <TableCell>
+                                <Tooltip title="View">
+                                    <IconButton onClick={()=>this.openDetailDialog(item)}>
+                                        <BsEyeFill size={28} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Edit">
+                                    <IconButton onClick={()=>this.openEditDialog(item)}> 
+                                        <BsFillPencilFill size={28} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Delete">
+                                    <IconButton onClick={()=>{this.deleteItem(item)}}>
+                                        <ImBin  size={28}/>
+                                    </IconButton>
+                                </Tooltip>
+                                
+                            
+                                
+                            </TableCell>
+                        </TableRow>
+                        )
+                    })}
+                    </TableBody>
+                    <TableFooter>
+                        <TableRow>
+                            <TablePagination
+                                rowsPerPageOptions={[5, 10, 15]}
+                                count={this.props.listLength}
+                                rowsPerPage={this.props.tableRowsNum}
+                                page={this.props.tablePage}
+                                onPageChange={(e,newpage)=>this.props.tablePageChange(e,newpage)}
+                                onRowsPerPageChange={(e)=>this.props.tableRowsChange(e)}
+                            />
+                        </TableRow>
+                    </TableFooter>
+                    
+                </Table>  
+                <ProductDetail {...this.state.detailDialogItem} type={this.props.type} subType={this.props.subType}
+                open={this.state.detailDialogOpen} openDialog={this.openDetailDialog} closeDialog={this.closeDetailDialog} /> 
+                <EditDialog submitHandler={this.submitHandler}  item={this.state.editDialogItem} open={this.state.editDialogOpen} closeDialog={this.closeEditDialog}/>
+                    
+            </TableContainer>
+            <Snackbar open={this.state.openSuccessSnackBar} autoHideDuration={9000} onClose={this.closeSuccessSnackBar} anchorOrigin={{vertical , horizontal}}>
+                    <Alert onClose={this.closeSuccessSnackBar} severity="success" sx={{ width: '100%' }}>
+                        {this.state.successSnackBarMessage}
+                    </Alert>
+                </Snackbar>
+                <Snackbar open={this.state.openFailSnackBar} autoHideDuration={9000} onClose={this.closeFailSnackBar} anchorOrigin={{vertical , horizontal}}>
+                    <Alert onClose={this.closeFailSnackBar} severity="error" >
+                        {this.state.failSnackBarMessage}
+                    </Alert>
+                </Snackbar>
+            </>
     )}
 }

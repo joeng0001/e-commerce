@@ -1,14 +1,14 @@
-import {axios_json,axios_form} from "./axios_instance";
+import {axios_form} from "./axios_instance";
 
 class axios_service{
     get_productList(){//fetch all product at once
-        return axios_json.get('/product_getList')
+        return axios_form.get('/product_getList')
     }
     get_categoryList(){//fetch all category at once
-        return axios_json.get('/category_getList')
+        return axios_form.get('/category_getList')
     }
     get_homeList(){//fetch all category that display at home at once
-        return axios_json.get('/homeList_getList')
+        return axios_form.get('/homeList_getList')
     }
     update_to_productList(data){//update existing item
         return axios_form.post('/product_updateToList',data)
@@ -34,8 +34,14 @@ class axios_service{
     delete_from_productList(data){//delete a product from products table
         return axios_form.post('/product_deleteFromList',data)
     }
-    delete_subCate_from_category(data){//delete subCategory from categories table,aboot if having items belongs to the subCate
+    delete_subCate_from_category(data){//delete subCategory from categories table,abort if having items belongs to the subCate
         return axios_form.post('/category_deleteSubCateFromList',data)
+    }
+    delete_from_category(data){//delete a category from categories table,abort if having items belongs to this category
+        return axios_form.post('/category_deleteFromList',data)
+    }
+    login(data){
+        return axios_form.post('/login',data)
     }
     get_img(){//testing
         return axios_form.get('/get_img')

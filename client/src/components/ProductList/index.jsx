@@ -1,4 +1,3 @@
-
 import './index.css'
 import {Component} from 'react'
 import ProductDetail from '../ProductDetail'
@@ -20,30 +19,36 @@ export default class ProductList extends Component {
   
   state={dialogOpen:false,dialogItem:null}
   setDialogItem=(item)=>{
+    //set item to display in dialog
     this.setState({dialogItem:item})
   }
   closeDialog=()=>{
+    //close dialog
      this.setState({dialogOpen:false})
   }
   openDialog=(item)=>{
+    //set item to display in dialog and open the dialog
     this.setState({dialogItem:item})
     this.setState({dialogOpen:true})
   }
   addToFavour=(obj)=>{
+    //store item to Favour with adding property of type/subType
     let newObj={...obj}
     newObj.type=this.props.type
     newObj.subType=this.props.subType
-    console.log(newObj)
     store.dispatch(AddToFavour(newObj))
   }
   removeFromFavour=(obj)=>{
+    //remove from Favour 
     store.dispatch(RemoveFromFavour(obj))
   }
   openCart=()=>{
+    //close dialog and open Cart Drawer
     this.closeDialog()
     store.dispatch(OpenCartDrawer(true))
   }
   addOneToCart=(item)=>{
+    //store item to Cart with adding property of type/subType,and orderNum default 1
     let newitem={...item}
     newitem.type=this.props.type
     newitem.subType=this.props.subType

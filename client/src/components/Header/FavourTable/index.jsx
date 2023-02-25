@@ -3,8 +3,10 @@ import {Component} from 'react'
 import store from '../../../redux/store'
 import {RemoveFromFavour} from '../../../redux/action/favour_action'
 import {ImBin} from 'react-icons/im'
+import imageURL from '../../../imageURL';
 import './index.css'
 export default class FavourTable extends Component {  
+    //table component that inside the  favour Drawer
     state={selectedItems:[]}
     AllClick=(event)=>{
         if(event.target.checked)
@@ -100,7 +102,7 @@ export default class FavourTable extends Component {
                             onChange={(e)=>this.checkHandler(e,item)}
                         />
                     </TableCell>
-                    <TableCell><div><img src={`../../../../productPhoto/${item.type}/${item.subType}/${item.name}.jpg` } alt="not found"className="CartTable_itemImg"></img></div>{item.name}</TableCell>
+                    <TableCell><div><img src={`${imageURL}/${item.PID}` } alt="not found"className="CartTable_itemImg"></img></div>{item.name}</TableCell>
                     <TableCell>${item.price}</TableCell>
                         <TableCell>
                             <button><ImBin onClick={()=>this.RemoveFromFavour(item)} size={28} className="FavourTable_icon"/></button>

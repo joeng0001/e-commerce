@@ -9,6 +9,7 @@ export default function Home() {
   //whenever store data change,rerender whole APP by update state
   const [forceUpdate, setForceUpdate] = useState(false);
   store.subscribe(()=>{
+    //update HomeProductList component->in favour/cart depends on data in store
     setForceUpdate(!forceUpdate)
   })
 

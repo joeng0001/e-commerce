@@ -6,3 +6,5 @@ export const DirectSetNumToCart=data=>({type:'DirectSetNumToCart',data})
 
 export const RemoveAllFromCart=data=>({type:'RemoveAllFromCart',data})
 export const RemoveOneFromCart=data=>({type:'RemoveOneFromCart',data})
+
+export const RestoreCartListFromLocalStorage=data=>({type:'RestoreCartListFromLocalStorage',data})

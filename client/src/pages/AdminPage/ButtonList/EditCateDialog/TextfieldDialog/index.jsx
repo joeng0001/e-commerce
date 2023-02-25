@@ -2,12 +2,14 @@ import {Dialog,DialogTitle,DialogContent,DialogActions,Button,TextField, FormCon
 import { useState,useEffect} from 'react';
 import './index.css'
 export default function EditCateDialog(props){
-    const [content,setContent]=useState(props.content)
-    const [originContent,setOriginContent]=useState(props.content)
+    const [content,setContent]=useState(props.content)//store the input of textfield
+    const [originContent,setOriginContent]=useState(props.content)//store the original content before modification
     const changeHandler=(e)=>{
+        //store the input to content
         setContent(e.target.value);
     }
     useEffect(()=>{
+        //since the component only render once,update content while props change
         setContent(props.content)
         setOriginContent(props.content)
     },[props.content])

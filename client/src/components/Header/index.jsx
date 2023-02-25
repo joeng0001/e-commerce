@@ -1,6 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
 import {Component} from 'react'
-import {AiFillHome} from "react-icons/ai"
 import Banner from './Banner'
 import Navigation from './Navigation'
 import {AiFillStar,AiOutlineShoppingCart,AiOutlineArrowRight} from 'react-icons/ai'
@@ -12,6 +11,7 @@ import {OpenCartDrawer} from '../../redux/action/cart_action'
 import {OpenFavourDrawer} from '../../redux/action/favour_action'
 import {GiSeaDragon} from 'react-icons/gi'
 import './index.css'
+import axios_service from "../../axios_service";
 export default class Header extends Component {
   state={direction:"right",login:false}
   openCartDrawer=()=>{
@@ -29,11 +29,17 @@ export default class Header extends Component {
   simple_login_verify=()=>{
     var acc = prompt('account');
     var pw  = prompt('password');
-    if(acc==="joe"){
-      if(pw==="secret"){
-        this.setState({login:true})
-      }
-    }
+    let form=new FormData();
+    form.append('acc',acc)
+    form.append('pw',pw)
+    axios_service.login(form)
+    .then(res=>{
+      this.setState({login:true})
+    })
+    .catch(e=>{
+      //console.log(e.response.data)
+      return 
+    })
   }
   render(){
     return (

@@ -15,58 +15,66 @@ import {OpenCartDrawer,DirectSetNumToCart} from '../../redux/action/cart_action'
 import imageURL from '../../imageURL';
 
 export default function ProductDetail(props) {
-  const [product_cnt, setproduct_cnt] = React.useState(1);
-  const numberSelector=Array.from(Array(100).keys()).slice(1) 
+  //dialog to show product detail
+  const [product_cnt, setproduct_cnt] = React.useState(1);//store number of item selected by client
+  const numberSelector=Array.from(Array(100).keys()).slice(1) //create a selection list,number 1-100
   const addToFavour=()=>{
+    //remove unrelated property from prop->remain detail of product
     let props_obj=JSON.parse(JSON.stringify(props));
     delete props_obj.open
     delete props_obj.openDialog
     delete props_obj.closeDialog
-    //props_obj is now all the detail of an obj->detail of product
     store.dispatch(AddToFavour(props_obj))
   }
   const removeFromFavour=()=>{
-    let obj={
-      PID:props.PID
-    }
-    store.dispatch(RemoveFromFavour(obj))
+    //remove item by PID
+    store.dispatch(RemoveFromFavour({PID:props.PID}))
   }
   const addToCart=()=>{
+    //get item number that already added to store
     let currentNum=store.getState().CartReducer.cartList.find((obj)=>{
       return obj.PID===props.PID
     })?.orderNum
+    //if exist in cart,add it as total number,else set number as the current selected number
     const totalNum=currentNum?product_cnt+currentNum*1:product_cnt;
      let props_obj=JSON.parse(JSON.stringify(props));
+    //remove unrelated props property,remain is detail of the product
     delete props_obj.open
     delete props_obj.openDialog
     delete props_obj.closeDialog
+    //save to store with setting orderNum property
     store.dispatch(DirectSetNumToCart({...props_obj,orderNum:totalNum}))
-    setproduct_cnt(1);//reset the number after add to store
+    //reset current state of item number after add to store
+    setproduct_cnt(1);
   }
   const addOneCount=()=>{
+    //if already in cart,open cart drawer to modify orderNum
     if(store.getState().CartReducer.cartList.findIndex((obj)=>{return obj.PID===props.PID})>-1){
-      //if already in cart,do not add item in dialog but directly in cart list
       openCart();
       return
     }
+    //else add  one the the product count
     setproduct_cnt(product_cnt+1);
   }
   const minusOneCount=()=>{
+    //minus one from the product count
     setproduct_cnt(product_cnt-1);
   }
   const openCart=()=>{
+    //close current dialog and open the cart drawer
     props.closeDialog()
     store.dispatch(OpenCartDrawer(true))
   }
   const ItemNumChangeHandler =(event)=>{
+    //if already in cart,open cart drawer to modify orderNum
     if(store.getState().CartReducer.cartList.findIndex((obj)=>{return obj.PID===props.PID})>-1){
-      //if already in cart,do not add item in dialog but directly open cart list
       openCart();
       return
     }
     setproduct_cnt(event.target.value);
   }
   const closeHandler=()=>{
+    //close dialog and reset product count state
     props.closeDialog()
     setproduct_cnt(1)
   }

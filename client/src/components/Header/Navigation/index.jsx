@@ -8,6 +8,7 @@ export default class Navigation extends Component {
     window.scrollTo(0, 0)
   }
   getIcon=({name})=>{
+    //set icon base on the name that store in db
     const Icon = Icons[name];
     if (!Icon) {
       return <Icons.MdFastfood/>;
@@ -15,6 +16,7 @@ export default class Navigation extends Component {
     return <Icon />;
   }
   render(){
+    //component of Category link bar
       return (
           <div className="Navigation_wrapper">
             {

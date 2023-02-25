@@ -10,25 +10,43 @@ import store from './redux/store';
 import {initialItemList} from '../src/redux/action/item_action'
 import {initialCategoryList,initialCIDList,initialIconList} from '../src/redux/action/category_action'
 import { initialHomeList } from './redux/action/homeList_action';
+import { RestoreFavourListFromLocalStorage } from './redux/action/favour_action';
+import { RestoreCartListFromLocalStorage } from './redux/action/cart_action';
 import axios_service from './axios_service'
 function App() {
-  let data;
   const route=useRoutes(routes);
   const [loading,setLoading]=useState(true);
+  const restorelocalStorage=async(itemList)=>{
+    let restoredFavourList=[];
+    JSON.parse(window.localStorage.getItem("favourList"))?.forEach(pid=>{
+      restoredFavourList.push(itemList.find(obj=>{
+        return obj.PID===pid
+      }))
+    })
+    let restoredCartList=[];
+    JSON.parse(window.localStorage.getItem("cartList"))?.forEach(PQPair=>{//each PQPair is {PID:orderNum}
+      let item=itemList.find(obj=>{
+        return obj.PID===PQPair.PID
+      })
+      restoredCartList.push({...item,orderNum:PQPair.orderNum})
+    })
+    store.dispatch(RestoreFavourListFromLocalStorage(restoredFavourList))
+  store.dispatch(RestoreCartListFromLocalStorage(restoredCartList))
+    return
+  }
   const initiation=async ()=>{
         let categories;
-        //let CIDPair={};
+        let items;
         await axios_service.get_categoryList()
           .then(res => categories=res.data)
           .catch(e=>console.log(e))
         await axios_service.get_productList()
           .then(res => {
-              const items=res.data;
+              items=res.data;
               const items_list_with_type_subtype_property={};
               const category_list={};
               const icon_list={};
               categories.forEach((cate)=>{
-                //CIDPair[cate.CID]=cate.NAME;
                 items_list_with_type_subtype_property[cate.NAME]={};
                 let subCateList=cate.subCategories.split(",");
                 category_list[cate.NAME]=subCateList;
@@ -60,6 +78,7 @@ function App() {
             store.dispatch(initialHomeList(list))
           })
           .catch(e=>console.log(e))
+        await restorelocalStorage(items);
         setLoading(false);  
     }
     useEffect(()=>{
@@ -75,10 +94,6 @@ function App() {
             
               <Suspense fallback={<h2>Loading...</h2>}>
                 {route}  
-                {/* <img
-                src="http://localhost:3000/c5405b54-29b7-462c-8553-21517238cfed"
-                alt="not found"
-                /> */}
               </Suspense>     
             
           </div>

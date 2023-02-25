@@ -3,39 +3,36 @@ import { useParams,Link } from 'react-router-dom';
 import {BsArrowDown} from 'react-icons/bs'
 import React ,{useState,useEffect}from 'react';
 import ProductList from '../../components/ProductList';
-import {subNavigationList,productList} from '../../sampleData'
 import Pagination from '@mui/material/Pagination';
 import store from '../../redux/store'
 import {GiSeaDragon} from 'react-icons/gi'
 
-export default function SubNavigation() {//use functional component for using useParam()
-
-     //whenever store data change,rerender whole APP by update state
-    const [forceUpdate, setForceUpdate] = useState(false);
-    const prolist=store.getState().ItemReducer.itemList;
-    store.subscribe(()=>{
-        setForceUpdate(!forceUpdate)
-    })
-    //const navlist  =subNavigationList; //i.e. under food,sub list contain apple,orange...
-    const navlist  =store.getState().CategoryReducer.categoryList; 
-    const { type,subType } = useParams();
+export default function SubNavigation() {
+    const prolist=store.getState().ItemReducer.itemList;//list of all the item
+    const navlist  =store.getState().CategoryReducer.categoryList; //list of categories
+    const { type,subType } = useParams();//params in URL
     const [showMoreMsg, setShowMoreMsg] = useState(navlist[type]?.length>4);//display the show more msg if more than 4 subtype
-    const [page, setPage] = useState(1);//default 1 page
-    const [totalPage,setTotalPage]=useState(Math.ceil(prolist[type][subType]?.length/12)>0?Math.ceil(prolist[type][subType]?.length/12):1)///make sure at least 1
-    const [list,setList]=useState(prolist[type][subType]?.slice(page*12-12,page*12));
-    let ContainerRef=React.createRef()
+    const [page, setPage] = useState(1);//current page,default 1 page
+    const [totalPage,setTotalPage]=useState(Math.ceil(prolist[type][subType]?.length/12)>0?Math.ceil(prolist[type][subType]?.length/12):1)//totalpage by calculation 
+    const [list,setList]=useState(prolist[type][subType]?.slice(page*12-12,page*12));//product list to display in Table component
+    let ContainerRef=React.createRef()//Ref to Drawer container
     function scrollHandler(){
+        //if not scrolled to bottom,show the message of "More"
         setShowMoreMsg(ContainerRef.current.scrollHeight - ContainerRef.current.scrollTop !== ContainerRef.current.clientHeight);
     }
     function scrollDown(){
+        //while click the "More" message,directly scroll to bottom and hide the message.
         ContainerRef.current.scrollTop=ContainerRef.current.scrollHeight+ContainerRef.current.clientHeight;
         setShowMoreMsg(false);
     }
     function handlePageChange(event,newValue){
+        //while page change,store new page value and reset list to display in table
         setPage(newValue)
         setList(prolist[type][subType].slice(newValue*12-12,newValue*12))
     }
     useEffect(()=>{
+        //monitor type and subType changing->i.e. click Navigation bar on Header
+        //reset all the property
         setShowMoreMsg(navlist[type]?.length>4)
         setTotalPage(Math.ceil(prolist[type][subType]?.length/12)>0?Math.ceil(prolist[type][subType]?.length/12):1)
         setPage(1)

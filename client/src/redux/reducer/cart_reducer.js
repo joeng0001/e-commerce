@@ -14,9 +14,11 @@ export default function cartReducer(preState={cartList:[],open:false},action){
                 if(newCartList[duplicateItemIndex].orderNum<99){
                     newCartList[duplicateItemIndex].orderNum+=1
                 }
+                window.localStorage.setItem("cartList",JSON.stringify(newCartList))
                 return {...preState,cartList:newCartList}
             }
             //no match found in iist,insert to list
+            window.localStorage.setItem("cartList",JSON.stringify([...preState.cartList,data]))
             return {...preState,cartList:[...preState.cartList,data]}
 
         case 'RemoveOneFromCart':
@@ -28,8 +30,10 @@ export default function cartReducer(preState={cartList:[],open:false},action){
                 if(newCartList[duplicateItemIndex].orderNum>1){
                     newCartList[duplicateItemIndex].orderNum-=1
                 }
+                //window.localStorage.setItem("cartList",JSON.stringify(newCartList))
                 return {...preState,cartList:newCartList}
             }
+            //unlike AddOneToCart,this would remove the item unless RemoveALlFromCart is called
             return {...preState,cartList:[...preState.cartList,data]}    
         
         case 'DirectSetNumToCart':
@@ -41,15 +45,20 @@ export default function cartReducer(preState={cartList:[],open:false},action){
                 if(data.orderNum*1<=99){
                     newCartList[duplicateItemIndex].orderNum=data.orderNum*1
                 }
+                //window.localStorage.setItem("cartList",JSON.stringify(newCartList))
                 return {...preState,cartList:newCartList}
             }
+            //window.localStorage.setItem("cartList",JSON.stringify([...preState.cartList,data]))
             return {...preState,cartList:[...preState.cartList,data]}
 
         case 'RemoveAllFromCart':
             let res=(preState.cartList).filter((obj)=>{
                 return obj.PID!==data.PID
             });
+            //window.localStorage.setItem("cartList",JSON.stringify(res))
             return {...preState,cartList:res}
+        case 'RestoreCartListFromLocalStorage':
+            return {...preState,cartList:data}
         default:
             return preState
     }

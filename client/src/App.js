@@ -31,7 +31,7 @@ function App() {
       restoredCartList.push({...item,orderNum:PQPair.orderNum})
     })
     store.dispatch(RestoreFavourListFromLocalStorage(restoredFavourList))
-  store.dispatch(RestoreCartListFromLocalStorage(restoredCartList))
+    store.dispatch(RestoreCartListFromLocalStorage(restoredCartList))
     return
   }
   const initiation=async ()=>{
@@ -79,7 +79,7 @@ function App() {
           })
           .catch(e=>console.log(e))
         await restorelocalStorage(items);
-        setLoading(false);  
+          setLoading(false);  
     }
     useEffect(()=>{
       initiation()

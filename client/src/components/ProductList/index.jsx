@@ -6,7 +6,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 
-
+import InfiniteScroll from 'react-infinite-scroll-component';
 import {AiOutlineStar,AiFillStar,AiOutlineShoppingCart} from 'react-icons/ai'
 import {BsFillCartCheckFill} from 'react-icons/bs'
 import Button from '@mui/material/Button';
@@ -55,10 +55,16 @@ export default class ProductList extends Component {
     store.dispatch(AddOneToCart({...newitem,orderNum:1}))
   }
   render(){
-    const {type,subType,list}=this.props;
+    const {type,subType,list,loadMore,hasMoreToLoad}=this.props;
      return(
         <div className="ProductList_wrapper">
-          <div className="ProductList_tableless">
+            <InfiniteScroll
+              dataLength={list?.length}
+              next={loadMore}
+              hasMore={hasMoreToLoad}
+              loader={<h4>Loading...</h4>}
+              className="ProductList_tableless" 
+            >
             {
               list?.map((obj)=>{
                 return (
@@ -117,9 +123,9 @@ export default class ProductList extends Component {
 
               )})
             }
+            </InfiniteScroll>
             <ProductDetail {...this.state.dialogItem} type={type} subType={subType} open={this.state.dialogOpen} 
             openDialog={this.openDialog} closeDialog={this.closeDialog} />
-          </div>
         </div>      
       );
   }

@@ -3,18 +3,26 @@ import { useParams,Link } from 'react-router-dom';
 import {BsArrowDown} from 'react-icons/bs'
 import React ,{useState,useEffect}from 'react';
 import ProductList from '../../components/ProductList';
-import Pagination from '@mui/material/Pagination';
+/*import Pagination from '@mui/material/Pagination';*/
 import store from '../../redux/store'
 import {GiSeaDragon} from 'react-icons/gi'
+
+//some note: 
+//origin design to implement pagination,but for fulfilling assignment requirement
+//switch to infinte scroll 
+
 
 export default function SubNavigation() {
     const prolist=store.getState().ItemReducer.itemList;//list of all the item
     const navlist  =store.getState().CategoryReducer.categoryList; //list of categories
     const { type,subType } = useParams();//params in URL
     const [showMoreMsg, setShowMoreMsg] = useState(navlist[type]?.length>4);//display the show more msg if more than 4 subtype
-    const [page, setPage] = useState(1);//current page,default 1 page
-    const [totalPage,setTotalPage]=useState(Math.ceil(prolist[type][subType]?.length/12)>0?Math.ceil(prolist[type][subType]?.length/12):1)//totalpage by calculation 
-    const [list,setList]=useState(prolist[type][subType]?.slice(page*12-12,page*12));//product list to display in Table component
+    //const [page, setPage] = useState(1);//current page,default 1 page
+    // const [totalPage,setTotalPage]=useState(Math.ceil(prolist[type][subType]?.length/12)>0?Math.ceil(prolist[type][subType]?.length/12):1)//totalpage by calculation 
+    //const [list,setList]=useState(prolist[type][subType]?.slice(page*12-12,page*12));//product list to display in Table component
+    const [list,setList]=useState(prolist[type][subType]?.slice(0,10));
+    const [loadMoreCount,setloadMoreCount]=useState(1)//similar to page implementation
+    const [hasMoreToLoad,setHasMoreToLoad]=useState(prolist[type][subType]?.length>10)
     let ContainerRef=React.createRef()//Ref to Drawer container
     function scrollHandler(){
         //if not scrolled to bottom,show the message of "More"
@@ -25,19 +33,32 @@ export default function SubNavigation() {
         ContainerRef.current.scrollTop=ContainerRef.current.scrollHeight+ContainerRef.current.clientHeight;
         setShowMoreMsg(false);
     }
+    /*
     function handlePageChange(event,newValue){
         //while page change,store new page value and reset list to display in table
         setPage(newValue)
         setList(prolist[type][subType].slice(newValue*12-12,newValue*12))
     }
+    */
+
+    function loadMore(){
+        setList(list.concat(prolist[type][subType]?.slice((loadMoreCount+1)*10-10,(loadMoreCount+1)*10)))
+        setloadMoreCount(loadMoreCount+1)
+        setHasMoreToLoad((loadMoreCount+1)*10<prolist[type][subType]?.length)
+    }
     useEffect(()=>{
         //monitor type and subType changing->i.e. click Navigation bar on Header
         //reset all the property
+        /*
         setShowMoreMsg(navlist[type]?.length>4)
         setTotalPage(Math.ceil(prolist[type][subType]?.length/12)>0?Math.ceil(prolist[type][subType]?.length/12):1)
         setPage(1)
         setList(prolist[type][subType]?.slice(0,12))
-    },[type,subType])
+        */
+        setloadMoreCount(1)
+        setHasMoreToLoad(prolist[type][subType]?.length>10)
+        setList(prolist[type][subType]?.slice(0,10))
+    },[type,subType,prolist])
       return (
         <div className="SubNavigation_wrapper">
             <div className="SubNavigation_leftbar">
@@ -78,10 +99,12 @@ export default function SubNavigation() {
                 }
             </div>
             <div className="SubNavigation_rightBar">
+                {/* 
                 <Pagination 
                     count={totalPage} 
-                    page={page} color="secondary" size="large" onChange={handlePageChange} className="SubNavigation_paging" /> 
-                <ProductList type={type} subType={subType} list={list}/>
+                    page={page} color="secondary" size="large" onChange={handlePageChange} className="SubNavigation_paging" />  
+                */}
+                <ProductList type={type} subType={subType} list={list} loadMore={loadMore} hasMoreToLoad={hasMoreToLoad}/>
             </div>
         </div>      
       );

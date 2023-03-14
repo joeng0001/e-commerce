@@ -3,6 +3,7 @@ import {Component} from 'react'
 import Banner from './Banner'
 import Navigation from './Navigation'
 import {AiFillStar,AiOutlineShoppingCart,AiOutlineArrowRight} from 'react-icons/ai'
+import {MdAttachMoney} from  'react-icons/md'
 import CartTable from './CartTable'
 import FavourTable from './FavourTable'
 import Drawer from '@mui/material/Drawer';
@@ -42,6 +43,12 @@ export default class Header extends Component {
     })
   }
   render(){
+    const initialValue = 0;
+    const price = store.getState().CartReducer.cartList.reduce(
+      (accumulator, item) => accumulator + item.price*item.orderNum*1,
+      initialValue
+    );
+    
     return (
         <div className="Header_wrapper">
           <header className="Header_linkWrapper">
@@ -74,8 +81,8 @@ export default class Header extends Component {
               onClose={this.closeCartDrawer}
             >
               <div>
-               <span><AiOutlineShoppingCart/> </span>
-                <span>({store.getState().CartReducer.cartList.length})</span>
+               <span><AiOutlineShoppingCart/>({store.getState().CartReducer.cartList.length})</span>
+                <span><MdAttachMoney/>{price}</span>
                 <button className="Header_checkOutBtn">Check Out<AiOutlineArrowRight/></button>
               </div>
                <CartTable/>

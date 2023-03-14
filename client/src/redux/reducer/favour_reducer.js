@@ -12,10 +12,11 @@ export default function favourReducer(preState={favourList:[],open:false},action
             return {...preState,favourList:[...preState.favourList,data]}
         case 'RemoveFromFavour':
             originStorageFavourList=JSON.parse(window.localStorage.getItem("favourList"))||[]//return a list of PID list or empty list
-            newStorageFavourList=originStorageFavourList.filter(obj=>{//filter out the remove target
-                return obj.PID!==data?.PID
+            newStorageFavourList=originStorageFavourList.filter(PID=>{//filter out the remove target
+                return PID!==data?.PID
             })
             window.localStorage.setItem("favourList",JSON.stringify(newStorageFavourList))
+            console.log("storing new favour list",newStorageFavourList)
             return {...preState,favourList:(preState.favourList).filter((obj)=>{
                 return obj.PID!==data.PID
             })}

@@ -12,9 +12,13 @@ import './index.css'
 import { initialItemList} from '../../../redux/action/item_action'
 import {initialCategoryList,initialCIDList,initialIconList} from '../../../redux/action/category_action'
 import { initialHomeList} from '../../../redux/action/homeList_action';
+import SnackBar from '../../../components/SnackBar'
+//import { useNavigate } from 'react-router';
+import { withRouter } from 'react-router-dom';
 export default class AdminTable extends Component {  
+    
     state={selectedItems:[],detailDialogOpen:false,detailDialogItem:null,editDialogOpen:false,editDialogItem:null,
-    openSuccessSnackBar:false,successSnackBarMessage:"",openFailSnackBar:false,failSnackBarMessage:false}
+    openSnackBar:false,snackBarMessage:"",snackBarSeverity:false}
     AllClick=(event)=>{
         //add all item to the selectedItems list or empty the selectedItems list
         if(event.target.checked)
@@ -22,6 +26,7 @@ export default class AdminTable extends Component {
         else
             this.setState({selectedItems:[]})  
     }
+    //navigate=useNavigate();
     fetchData=async()=>{
         //fetch all data after update,and save to store
         let categories;
@@ -95,13 +100,9 @@ export default class AdminTable extends Component {
         //close the item to display in edit Dialog and close dialog
         this.setState({editDialogItem:null,editDialogOpen:false});
     }
-    closeSuccessSnackBar=()=>{
+    closeSnackBar=()=>{
         //pclose success snack bar after displaying success message
-        this.setState({openSuccessSnackBar:false});
-    }
-    closeFailSnackBar=()=>{
-        //close fail snack bar after displaying failure message
-        this.setState({openFailSnackBar:false});
+        this.setState({openSnackBar:false});
     }
     checking=(item,image)=>{
     //perform simple checking before sending request to server
@@ -144,7 +145,7 @@ export default class AdminTable extends Component {
         let check_res=this.checking(item,image)
         if(check_res!==" "){
             //if fail to pass checking,display the message and return
-            this.setState({openFailSnackBar:true,failSnackBarMessage:`Insert Failed => ${check_res}`})
+            this.setState({snackBarSeverity:false,openSnackBar:true,snackBarMessage:`Insert Failed => ${check_res}`})
             return
         }
         //after passing checking,construct a Form with all properties of the item
@@ -155,17 +156,22 @@ export default class AdminTable extends Component {
         if(image){
             form.append('file',image,image?.name)
         }
+        //start calling 
         //send the form to server via axios
         axios_service.update_to_productList(form)
         .then(async (res)=>{
             //if success,display success message,close editing dialog,and fetch data for update 
-            this.setState({openSuccessSnackBar:true,successSnackBarMessage:res.data})
+            this.setState({snackBarSeverity:true,openSnackBar:true,snackBarMessage:res.data})
             this.closeEditDialog();
             await this.fetchData();
         })
         .catch((e)=>{
             //if fail,display the failure message
-            this.setState({openFailSnackBar:true,failSnackBarMessage:e.response.data})
+            this.setState({snackBarSeverity:false,openSnackBar:true,snackBarMessage:e.response.data})
+            if(e.response.data==="cookie expired"||e.response.data==="Fail to pass checking"){
+                //will loss the login state with using window.location for redirection
+                 window.location.pathname="/login";
+            }
         })
         return 
     }
@@ -181,17 +187,21 @@ export default class AdminTable extends Component {
         axios_service.delete_from_productList(form)
         .then(async (res)=>{
             //display success message and fetch data for update
-            this.setState({openSuccessSnackBar:true,successSnackBarMessage:res.data})
+            this.setState({snackBarSeverity:true,openSnackBar:true,snackBarMessage:res.data})
             await this.fetchData();
 
         })
         .catch((e)=>{
             //if fail,display failure message
-            this.setState({openFailSnackBar:true,failSnackBarMessage:e.response.data})
+            this.setState({snackBarSeverity:false,openSnackBar:true,snackBarMessage:e.response.data})
+            if(e.response?.data==="cookie expired"||e.response?.data==="Fail to pass checking"){
+                //will loss the login state with using window.location for redirection
+                window.location.pathname="/login";
+            }
+        
         })
     }
     render(){
-        const vertical='top',horizontal='center'//position param of success/failure snackBar
         return(
             <>
             <TableContainer>
@@ -294,16 +304,7 @@ export default class AdminTable extends Component {
                 <EditDialog submitHandler={this.submitHandler}  item={this.state.editDialogItem} open={this.state.editDialogOpen} closeDialog={this.closeEditDialog}/>
                     
             </TableContainer>
-            <Snackbar open={this.state.openSuccessSnackBar} autoHideDuration={9000} onClose={this.closeSuccessSnackBar} anchorOrigin={{vertical , horizontal}}>
-                    <Alert onClose={this.closeSuccessSnackBar} severity="success" sx={{ width: '100%' }}>
-                        {this.state.successSnackBarMessage}
-                    </Alert>
-                </Snackbar>
-                <Snackbar open={this.state.openFailSnackBar} autoHideDuration={9000} onClose={this.closeFailSnackBar} anchorOrigin={{vertical , horizontal}}>
-                    <Alert onClose={this.closeFailSnackBar} severity="error" >
-                        {this.state.failSnackBarMessage}
-                    </Alert>
-                </Snackbar>
+            <SnackBar openSnackBar={this.state.openSnackBar} closeSnackBar={this.closeSnackBar} severity={this.state.snackBarSeverity} message={this.state.snackBarMessage}/>
             </>
     )}
 }

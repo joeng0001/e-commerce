@@ -9,8 +9,11 @@ import store from '../../../../redux/store';
 import { initialItemList} from '../../../../redux/action/item_action'
 import {initialCategoryList,initialCIDList,initialIconList} from '../../../../redux/action/category_action'
 import { initialHomeList} from '../../../../redux/action/homeList_action';
+import SnackBar from '../../../../components/SnackBar'
+import { useNavigate } from 'react-router';
 import './index.css'
 export default function EditCateDialog(props){
+    const navigate=useNavigate();
     const [CIDList,setCIDList]=useState(store.getState().CategoryReducer.CIDList)//list of {CID,category,subCategory}
     const [currCate,setCurrCate]=useState(CIDList[0]?.NAME)//store current editing category
     const [subCateList,setSubCateList]=useState(CIDList[0]?.subCategories?.split(","))//store list of subCategory
@@ -18,11 +21,9 @@ export default function EditCateDialog(props){
     const [dialogTitle,setDialogTitle]=useState('new');//title of textfield dialog
     const [dialogTextContent,setDialogTextContent]=useState("")//default value in the textfield dialog
     const [dialogSubmitHandler,setDialogSubmitHandler]=useState(null);//store handler function of textfield dialog for different submission
-    const[openSuccessSnackBar,setOpenSuccessSnackBar]=useState(false);//control open success snack bar
-    const[successSnackBarMessage,setSuccessSnackBarMessage]=useState("");//success snack bar message
-    const[openFailSnackBar,setOpenFailSnackBar]=useState(false);//control open failure snack bar
-    const[failSnackBarMessage,setFailSnackBarMessage]=useState("");//failure snack bar message
-    const vertical='top',horizontal='center'//position param of snack bar
+    const[openSnackBar,setOpenSnackBar]=useState(false);//control open success snack bar
+    const[snackBarMessage,setSnackBarMessage]=useState("");//success snack bar message
+    const[snackBarSeverity,setSnackBarSeverity]=useState(true); //type of snack bar,true for success,false for error
     const selectHandler=(e)=>{
         //category selection handler,update currCate and subCategory list
         setCurrCate(e.target.value)
@@ -39,13 +40,9 @@ export default function EditCateDialog(props){
         //close textfield dialog
         SetOpenTextfieldDialog(false);
     }
-    const closeSuccessSnackBar=()=>{
-        //close success snack bar
-        setOpenSuccessSnackBar(false)
-    }
-    const closeFailSnackBar=()=>{
-        //close failure snack bar
-        setOpenFailSnackBar(false)
+    const closeSnackBar=()=>{
+        //close snack bar
+        setOpenSnackBar(false)
     }
     const fetchData=async()=>{
         //fetch data after update
@@ -116,15 +113,20 @@ export default function EditCateDialog(props){
         axios_service.delete_subCate_from_category(form)
         .then(async (res)=>{
             //if success,display success message,fetch data,update CID list in current state
-            setSuccessSnackBarMessage(res.data)
-            setOpenSuccessSnackBar(true) 
+            setSnackBarSeverity(true)
+            setSnackBarMessage(res.data)
+            setOpenSnackBar(true) 
             await fetchData()
             setCIDList(store.getState().CategoryReducer.CIDList)
         })
         .catch(e=>{
             //fail,display fail message
-            setFailSnackBarMessage("delete fail "+e.response.data)
-            setOpenFailSnackBar(true)
+            setSnackBarSeverity(false)
+            setSnackBarMessage("delete fail "+e.response.data)
+            setOpenSnackBar(true)
+            if(e.response.data==="cookie expired"||e.response.data==="Fail to pass checking"){
+                navigate('/login')
+            }
         })
     }
     const deleteCate=()=>{
@@ -144,8 +146,9 @@ export default function EditCateDialog(props){
         axios_service.delete_from_category(form)
         .then(async (res)=>{
             //if success,show success message,fetch data,update currCate to a new one,and update CID list in state
-            setSuccessSnackBarMessage(res.data)
-            setOpenSuccessSnackBar(true)
+            setSnackBarSeverity(true)
+            setSnackBarMessage(res.data)
+            setOpenSnackBar(true)
             await fetchData()
             setCurrCate(CIDList.find(obj=>obj.NAME!==currCate)?.NAME)//random pick another cate to handle after delete the current one
             setCIDList(store.getState().CategoryReducer.CIDList)
@@ -153,16 +156,21 @@ export default function EditCateDialog(props){
         })
         .catch(e=>{
             //fail,display fail message
-            setFailSnackBarMessage("delete fail "+e.response.data)
-            setOpenFailSnackBar(true)
+            setSnackBarSeverity(false);
+            setSnackBarMessage("delete fail "+e.response.data)
+            setOpenSnackBar(true)
+            if(e.response.data==="cookie expired"||e.response.data==="Fail to pass checking"){
+                navigate('/login')
+            }
         })
     }
     // editCateIcon/editCate/editSubCate/createSubCate/createCate are submit handler of textfield dialog
     const editCateIcon=(content,originData)=>{
         //edit icon of a category that display in headers' navigation bar
         if(!content||!contentCheck(content)){
-            setFailSnackBarMessage("Format not match!")
-            setOpenFailSnackBar(true)
+            setSnackBarSeverity(false)
+            setSnackBarMessage("Format not match!")
+            setOpenSnackBar(true)
             return
         }
         let form=new FormData();
@@ -176,20 +184,26 @@ export default function EditCateDialog(props){
         })
         axios_service.update_icon_to_category(form)
         .then(async (res)=>{
-            setSuccessSnackBarMessage(res.data)
-            setOpenSuccessSnackBar(true) 
+            setSnackBarSeverity(true)
+            setSnackBarMessage(res.data)
+            setOpenSnackBar(true) 
             await fetchData()
         })
         .catch(e=>{
-            setFailSnackBarMessage("insert fail "+e.response.data)
-            setOpenFailSnackBar(true)
+            setSnackBarSeverity(false)
+            setSnackBarMessage("insert fail "+e.response.data)
+            setOpenSnackBar(true)
+            if(e.response.data==="cookie expired"||e.response.data==="Fail to pass checking"){
+                navigate('/login')
+            }
         })
     }
     const editSubcate=(content,originData)=>{
         //rename a subCategory of current category
         if(!content||!contentCheck(content)){
-            setFailSnackBarMessage("Format not match!")
-            setOpenFailSnackBar(true)
+            setSnackBarSeverity(false)
+            setSnackBarMessage("Format not match!")
+            setOpenSnackBar(true)
             return
         }
         let form=new FormData();
@@ -204,21 +218,27 @@ export default function EditCateDialog(props){
         })
         axios_service.update_subCate_to_category(form)
         .then(async (res)=>{
-            setSuccessSnackBarMessage(res.data)
-            setOpenSuccessSnackBar(true) 
+            setSnackBarSeverity(true)
+            setSnackBarMessage(res.data)
+            setOpenSnackBar(true) 
             await fetchData()
             setCIDList(store.getState().CategoryReducer.CIDList)
         })
         .catch(e=>{
-            setFailSnackBarMessage("insert fail "+e.response.data)
-            setOpenFailSnackBar(true)
+            setSnackBarSeverity(false)
+            setSnackBarMessage("insert fail "+e.response.data)
+            setOpenSnackBar(true)
+            if(e.response.data==="cookie expired"||e.response.data==="Fail to pass checking"){
+                navigate('/login')
+            }
         })
     }
     const editCate=(content,originData)=>{
         //rename current category
         if(!content||!contentCheck(content)){
-            setFailSnackBarMessage("Format not match!")
-            setOpenFailSnackBar(true)
+            setSnackBarSeverity(false)
+            setSnackBarMessage("Format not match!")
+            setOpenSnackBar(true)
             return
         }
         let form=new FormData();
@@ -232,22 +252,28 @@ export default function EditCateDialog(props){
         })
         axios_service.update_to_category(form)
         .then(async (res)=>{
-            setSuccessSnackBarMessage(res.data)
-            setOpenSuccessSnackBar(true) 
+            setSnackBarSeverity(true)
+            setSnackBarMessage(res.data)
+            setOpenSnackBar(true) 
             await fetchData()
             setCurrCate(content)
             setCIDList(store.getState().CategoryReducer.CIDList)
         })
         .catch(e=>{
-            setFailSnackBarMessage("insert fail "+e.response.data)
-            setOpenFailSnackBar(true)
+            setSnackBarSeverity(false)
+            setSnackBarMessage("insert fail "+e.response.data)
+            setOpenSnackBar(true)
+            if(e.response.data==="cookie expired"||e.response.data==="Fail to pass checking"){
+                navigate('/login')
+            }
         })
     }
     const createSubcate=(content,originData)=>{
         //add a new subCategory to current category
         if(!content||!contentCheck(content)){
-            setFailSnackBarMessage("Format not match!")
-            setOpenFailSnackBar(true)
+            setSnackBarSeverity(false)
+            setSnackBarMessage("Format not match!")
+            setOpenSnackBar(true)
             return
         }
         let form=new FormData();
@@ -261,21 +287,27 @@ export default function EditCateDialog(props){
         })
         axios_service.insert_subCate_to_category(form)
         .then(async (res)=>{
-            setSuccessSnackBarMessage(res.data)
-            setOpenSuccessSnackBar(true)
+            setSnackBarSeverity(true)
+            setSnackBarMessage(res.data)
+            setOpenSnackBar(true)
             await fetchData()
             setCIDList(store.getState().CategoryReducer.CIDList)      
         })
         .catch(e=>{
-            setFailSnackBarMessage("insert fail "+e.response.data)
-            setOpenFailSnackBar(true)
+            setSnackBarSeverity(false)
+            setSnackBarMessage("insert fail "+e.response.data)
+            setOpenSnackBar(true)
+            if(e.response.data==="cookie expired"||e.response.data==="Fail to pass checking"){
+                navigate('/login')
+            }
         })
     }
     const createCate=(content,originData)=>{
         //create a new category
         if(!content||!contentCheck(content)){
-            setFailSnackBarMessage("Format not match!")
-            setOpenFailSnackBar(true)
+            setSnackBarSeverity(false)
+            setSnackBarMessage("Format not match!")
+            setOpenSnackBar(true)
             return
         }
         let form=new FormData();
@@ -289,16 +321,21 @@ export default function EditCateDialog(props){
         })
         axios_service.insert_to_category(form)
         .then(async(res)=>{
-            setSuccessSnackBarMessage(res.data)
-            setOpenSuccessSnackBar(true)
+            setSnackBarSeverity(true)
+            setSnackBarMessage(res.data)
+            setOpenSnackBar(true)
             await fetchData()
             setCurrCate(content)
             setCIDList(store.getState().CategoryReducer.CIDList)
             
         })
         .catch(e=>{
-            setFailSnackBarMessage("insert fail "+e.response.data)
-            setOpenFailSnackBar(true)
+            setSnackBarSeverity(true)
+            setSnackBarMessage("insert fail "+e.response.data)
+            setOpenSnackBar(true)
+            if(e.response.data==="cookie expired"||e.response.data==="Fail to pass checking"){
+                navigate('/login')
+            }
         })
     }
    
@@ -380,16 +417,7 @@ export default function EditCateDialog(props){
                     </DialogActions>
             </Dialog>
             <TextfieldDialog open={openTextfieldDialog} title={dialogTitle} closeDialog={closeDialog} content={dialogTextContent} submitHandler={dialogSubmitHandler}/>
-            <Snackbar open={openSuccessSnackBar} autoHideDuration={9000} onClose={closeSuccessSnackBar} anchorOrigin={{vertical , horizontal}}>
-                <Alert onClose={closeSuccessSnackBar} severity="success" sx={{ width: '100%' }}>
-                    {successSnackBarMessage}
-                </Alert>
-            </Snackbar> 
-             <Snackbar open={openFailSnackBar} autoHideDuration={9000} onClose={closeFailSnackBar} anchorOrigin={{vertical , horizontal}}>
-                <Alert onClose={closeFailSnackBar} severity="error" >
-                    {failSnackBarMessage}
-                </Alert>
-            </Snackbar>
+            <SnackBar openSnackBar={openSnackBar} closeSnackBar={closeSnackBar} severity={snackBarSeverity} message={snackBarMessage}/>
         </div>
     )
 }

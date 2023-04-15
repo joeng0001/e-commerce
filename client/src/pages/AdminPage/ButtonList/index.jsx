@@ -1,21 +1,25 @@
 import './index.css'
 import React from 'react'
-import { Button, Snackbar,Alert } from '@mui/material';
+import { Button, Alert } from '@mui/material';
 import EditDialog from '../Table/EditDialog';
 import EditCateDialog from './EditCateDialog';
+import OrderHistory from '../../../components/OrderHistory';
 import axios_service from '../../../axios_service';
 import store from '../../../redux/store';
 import { initialItemList} from '../../../redux/action/item_action'
 import {initialCategoryList,initialCIDList,initialIconList} from '../../../redux/action/category_action'
 import { initialHomeList} from '../../../redux/action/homeList_action';
+import SnackBar from '../../../components/SnackBar'
+import { useNavigate } from 'react-router';
+import { NavLink,Outlet } from 'react-router-dom';
 export default function ButtonList(props) {
+  const navigate=useNavigate();
   const [editDialogOpen,setEditDialogOpen]=React.useState(false);//control item edit dialog
   const [editCateDialogOpen,setEditCateDialogOpen]=React.useState(false);//control category edit dialog
-  const[openSuccessSnackBar,setOpenSuccessSnackBar]=React.useState(false);//control success snack bar
-  const[openFailSnackBar,setOpenFailSnackBar]=React.useState(false);//control failure snack bar
-  const[failSnackBarMessage,setFailSnackBarMessage]=React.useState("");//message display in fail snack bar
-  const[successSnackBarMessage,setSuccessSnackBarMessage]=React.useState("");//message display in success snack bar
-  const vertical='top',horizontal='center';//position param of snack bar
+  const [orderHistoryOpen,setOpenOrderHistory]=React.useState(false);
+  const[openSnackBar,setOpenSnackBar]=React.useState(false);//control snack bar
+  const[snackBarMessage,setSnackBarMessage]=React.useState("");//message display in  snack bar
+  const[snackBarSeverity,setSnackBarSeverity]=React.useState(true); //type of snack bar,true for success,false for error
   const openEditDialog=()=>{//open item edit dialog
     setEditDialogOpen(true);
   }
@@ -28,12 +32,17 @@ export default function ButtonList(props) {
   const closeEditCateDialog=()=>{//close category edit dialog
     setEditCateDialogOpen(false);
   }
-  const closeSuccessSnackBar=()=>{//close success snack bar
-    setOpenSuccessSnackBar(false)
+  const openHistoryOrder=()=>{
+    setOpenOrderHistory(true);
   }
-  const closeFailSnackBar=()=>{//close fail snack bar
-    setOpenFailSnackBar(false)
+  const closeHistoryOrder=()=>{
+    setOpenOrderHistory(false);
   }
+  const closeSnackBar=()=>{//close success snack bar
+    setOpenSnackBar(false)
+  }
+
+
   const fetchData=async()=>{
     //fetch data after update
     let categories;
@@ -120,8 +129,9 @@ export default function ButtonList(props) {
     let check_res=checking(item,image)
     if(check_res!==" "){
       //if not passing checking,display fail snack bar with message
-      setFailSnackBarMessage(`Insert Failed => ${check_res}`)
-      setOpenFailSnackBar(true)
+      setSnackBarMessage(`Insert Failed => ${check_res}`)
+      setSnackBarSeverity(false);
+      setOpenSnackBar(true)
       return 
     }
     //construct a form with data,send via axios
@@ -132,14 +142,19 @@ export default function ButtonList(props) {
     form.append('file',image,image.name)
     axios_service.insert_to_productList(form)
       .then(async(res)=>{
+          setSnackBarSeverity(true);
           setEditDialogOpen(false);
-          setSuccessSnackBarMessage(res.data)
-          setOpenSuccessSnackBar(true)
+          setSnackBarMessage(res.data)
+          setOpenSnackBar(true)
           await fetchData();
       })
       .catch((e)=>{
-          setFailSnackBarMessage(`Insert Failed => ${check_res}`)
-          setOpenFailSnackBar(true)
+          setSnackBarSeverity(false);
+          setSnackBarMessage(`Insert Failed => ${check_res}`)
+          setOpenSnackBar(true)
+          if(e.response.data==="cookie expired"||e.response.data==="Fail to pass checking"){
+                navigate('/login')
+            }
       })
     return 
   }
@@ -149,22 +164,14 @@ export default function ButtonList(props) {
   }
   return (
     <div className="ButtonList_Wrapper">
+        <Button color="secondary" variant="outlined" onClick={openHistoryOrder}>History order</Button> 
         <Button color="secondary" variant='outlined' onClick={openEditDialog}>Create item</Button>
         <Button color="secondary" variant='outlined' onClick={openEditCateDialog}>Edit Category</Button>
         <Button color="secondary" variant='contained' onClick={reload}>Click for reload</Button>
+        <OrderHistory open={orderHistoryOpen} closeDialog={closeHistoryOrder} getAll={true}/>
         <EditDialog item={{}} open={editDialogOpen} closeDialog={closeEditDialog} submitHandler={submitHandler} />
         <EditCateDialog open={editCateDialogOpen} closeDialog={closeEditCateDialog}/>
-        <Snackbar open={openSuccessSnackBar} autoHideDuration={6000} onClose={closeSuccessSnackBar} anchorOrigin={{vertical , horizontal}}>
-          <Alert onClose={closeSuccessSnackBar} severity="success" sx={{ width: '100%' }}>
-            {successSnackBarMessage}
-          </Alert>
-        </Snackbar>
-        <Snackbar open={openFailSnackBar} autoHideDuration={9000} onClose={closeFailSnackBar} anchorOrigin={{vertical , horizontal}}>
-          <Alert onClose={closeFailSnackBar} severity="error" >
-            {failSnackBarMessage}
-          </Alert>
-        </Snackbar>
-
+        <SnackBar openSnackBar={openSnackBar} closeSnackBar={closeSnackBar} severity={snackBarSeverity} message={snackBarMessage}/>
     </div>
   );
 }

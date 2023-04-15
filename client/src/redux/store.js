@@ -4,5 +4,6 @@ import FavourReducer from './reducer/favour_reducer'
 import ItemReducer from './reducer/item_reducer'
 import CategoryReducer from './reducer/category_reducer'
 import HomeListReducer from './reducer/homeList_reducer'
-let rootReducer=combineReducers({CartReducer,FavourReducer,ItemReducer,CategoryReducer,HomeListReducer})
+import SecurityReducer from './reducer/security_reducer'
+let rootReducer=combineReducers({CartReducer,FavourReducer,ItemReducer,CategoryReducer,HomeListReducer,SecurityReducer})
 export default configureStore({reducer: rootReducer})

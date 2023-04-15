@@ -18,6 +18,9 @@ import imageURL from '../../imageURL';
 export default class ProductList extends Component {
   
   state={dialogOpen:false,dialogItem:null}
+  // redirect_to_https=()=>{
+  //   this.navigate('/login')
+  // }
   setDialogItem=(item)=>{
     //set item to display in dialog
     this.setState({dialogItem:item})

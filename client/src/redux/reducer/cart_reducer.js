@@ -59,6 +59,9 @@ export default function cartReducer(preState={cartList:[],open:false},action){
             });
             window.localStorage.setItem("cartList",JSON.stringify(res))
             return {...preState,cartList:res}
+        case 'ClearCart':
+            window.localStorage.setItem("cartList",JSON.stringify([]))
+            return {...preState,cartList:[]}
         case 'RestoreCartListFromLocalStorage':
             return {...preState,cartList:data}
         default:

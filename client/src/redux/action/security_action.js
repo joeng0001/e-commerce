@@ -1,0 +1,7 @@
+export const addNonce=data=>({type:'addNonce',data})
+export const addUserid=data=>({type:'addUserid',data})
+export const addUserName=data=>({type:'addUserName',data})
+export const addPaypalClientID=data=>({type:'addPaypalClientID',data})
+export const changeLoginStatus=data=>({type:'changeLoginStatus',data})
+export const changeIsAdmin=data=>({type:'changeIsAdmin',data})
+export const Logout=data=>({type:'Logout',data})

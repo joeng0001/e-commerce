@@ -71,4 +71,5 @@
     background: rgb(196, 245, 196);
     transform: translateX(10px);
     transition: transform 0.5s ease;
+    cursor:pointer;
 }

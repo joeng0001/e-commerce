@@ -90,7 +90,6 @@ export default class CartTable extends Component {
             },
            
         ];
-
     return(
         <TableContainer>
             <Table>

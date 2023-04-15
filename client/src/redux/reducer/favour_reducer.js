@@ -16,7 +16,6 @@ export default function favourReducer(preState={favourList:[],open:false},action
                 return PID!==data?.PID
             })
             window.localStorage.setItem("favourList",JSON.stringify(newStorageFavourList))
-            console.log("storing new favour list",newStorageFavourList)
             return {...preState,favourList:(preState.favourList).filter((obj)=>{
                 return obj.PID!==data.PID
             })}

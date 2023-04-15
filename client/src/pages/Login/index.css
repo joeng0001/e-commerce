@@ -1,0 +1,26 @@
+.Login_container{
+    width: 100%;
+}
+.Login_panel{
+    text-align: center;
+    margin:5% 15% 5% 15%;
+    width:70%;
+    height:50%;
+    background: rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    border: 1px solid black;
+}
+.Login_inputBox{
+    font-size:20px;
+    color: rgb(183, 240, 240);
+    border: none;
+    border-bottom: 2px solid #000;
+    margin-bottom: 20px;
+    outline: none;
+    background: transparent;
+}
+.Login_loginBtn{
+    margin-left: 70px;
+}

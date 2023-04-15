@@ -4,7 +4,7 @@ import Drawer from './Drawer'
 import AdminTable from './Table'
 import ButtonList from './ButtonList'
 import store from '../../redux/store'
-import { useSearchParams} from 'react-router-dom'
+import {useSearchParams} from 'react-router-dom'
 export default function AdminPage() {
     //this component manage most of the state of drawer and table
     //so that drawer and table can pass data through this component

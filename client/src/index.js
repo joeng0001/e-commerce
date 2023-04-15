@@ -21,5 +21,4 @@ store.subscribe(()=>{
         </BrowserRouter>
   );
 })
-reportWebVitals();
 

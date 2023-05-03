@@ -126,7 +126,7 @@ export default class AdminTable extends Component {
         format_msg+="price "
     if(!(/^\d+$/.test(item.inventory)))
         format_msg+="inventory "
-    if(!(/^[A-Za-z]+$/).test(item.name))
+    if(!(/^[A-Za-z0-9\s]+$/).test(item.name))
         format_msg+="name "
     if(!(/^[A-Za-z]+$/).test(item.ComeFrom))
         format_msg+="comeFrom "
@@ -139,6 +139,7 @@ export default class AdminTable extends Component {
     return missing_msg+" "+format_msg+size_msg
   }
     submitHandler=(data,image)=>{
+        //update an item
         //handler of submission
         //construct an item and perform checking
         let item={...data}
@@ -250,7 +251,6 @@ export default class AdminTable extends Component {
                         </TableCell>
                         <TableCell>
                             <div>
-                                {/* <img src={`../../../productPhoto/${this.props.type}/${this.props.subType}/${item.name}.jpg`} alt="not found" className="adminTable_img"></img> */}
                                 <img src={`${imageURL}/${item.PID}`} alt="not found" className="adminTable_img"></img>
                             </div>
                         </TableCell>

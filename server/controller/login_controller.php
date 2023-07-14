@@ -18,6 +18,7 @@
                 $new_salt=salt_generator();
                 $q = $db->prepare("UPDATE user SET nonce = ?,salt=? WHERE userid = ?");
                 $q->execute([$hashed_nonce,$new_salt,$res['userid']]);
+                $http_res=new stdClass();
                 $http_res->userid=$res['userid'];
                 //save the nonce to the response
                 $http_res->nonce=$nonce;

@@ -13,7 +13,8 @@
             product_getList();
             break;
         case '/server.php/product_insertToList':
-            cookie_and_nonce_middleware(product_insertToList);
+            //cookie_and_nonce_middleware(product_insertToList);
+            product_insertToList(new PDO('sqlite:../cart.db'));
             break;
         case '/server.php/category_getList':
             category_getList();
@@ -22,31 +23,40 @@
             homeList_getList();
             break;
         case '/server.php/category_insertToList':
-            cookie_and_nonce_middleware(category_insertToList);
+            //cookie_and_nonce_middleware(category_insertToList);
+            category_insertToList(new PDO('sqlite:../cart.db'));
             break;
         case '/server.php/category_insertSubCateToList':
-            cookie_and_nonce_middleware(category_insertSubCateToList);
+            //cookie_and_nonce_middleware(category_insertSubCateToList);
+            category_insertSubCateToList(new PDO('sqlite:../cart.db'));
             break;
         case '/server.php/category_updateToList':
-            cookie_and_nonce_middleware(category_updateToList);
+            //cookie_and_nonce_middleware(category_updateToList);
+            category_updateToList(new PDO('sqlite:../cart.db'));
             break;
         case '/server.php/category_updateSubCateToList':
-            cookie_and_nonce_middleware(category_updateSubCateToList);
+            //cookie_and_nonce_middleware(category_updateSubCateToList);
+            category_updateSubCateToList(new PDO('sqlite:../cart.db'));
             break;
         case '/server.php/product_updateToList':
-            cookie_and_nonce_middleware(product_updateToList);
+            //cookie_and_nonce_middleware(product_updateToList);
+            product_updateToList(new PDO('sqlite:../cart.db'));
             break;
         case '/server.php/category_updateIconToList':
-            cookie_and_nonce_middleware(category_updateIconToList);
+            //cookie_and_nonce_middleware(category_updateIconToList);
+            category_updateIconToList(new PDO('sqlite:../cart.db'));
             break;
         case '/server.php/product_deleteFromList':
-            cookie_and_nonce_middleware(product_deleteFromList);
+            //cookie_and_nonce_middleware(product_deleteFromList);
+            product_deleteFromList(new PDO('sqlite:../cart.db'));
             break;
         case '/server.php/category_deleteSubCateFromList':
-            cookie_and_nonce_middleware(category_deleteSubCateFromList);
+            //cookie_and_nonce_middleware(category_deleteSubCateFromList);\
+            category_deleteSubCateFromList(new PDO('sqlite:../cart.db'));
             break;
         case '/server.php/category_deleteFromList':
-            cookie_and_nonce_middleware(category_deleteFromList);
+            //cookie_and_nonce_middleware(category_deleteFromList);
+            category_deleteFromList(new PDO('sqlite:../cart.db'));
             break;
         case '/server.php/login':
             login();
@@ -61,16 +71,20 @@
             signup();
             break;
         case '/server.php/create_order':
-            nonce_middleware(create_order);
+            //nonce_middleware(create_order);
+            create_order(new PDO('sqlite:../cart.db'));
             break;
         case '/server.php/save_order':
-            nonce_middleware(save_order);
+            //nonce_middleware(save_order);
+            save_order(new PDO('sqlite:../cart.db'));
             break;
         case '/server.php/get_order_for_client':
-            nonce_middleware(get_order_for_client);
+            //nonce_middleware(get_order_for_client);
+            get_order_for_client(new PDO('sqlite:../cart.db'));
             break;
         case '/server.php/get_order_for_admin':
-            cookie_and_nonce_middleware(get_order_for_admin);
+            //cookie_and_nonce_middleware(get_order_for_admin);
+            get_order_for_admin(new PDO('sqlite:../cart.db'));
             break;  
         case '/server.php/test':
             echo letter_number_space_only("hi guys");

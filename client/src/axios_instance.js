@@ -18,7 +18,7 @@ export const axios_form = axios.create({
 
 
 export const secure_axios_form=axios.create({
-  baseURL: "https://localhost/server.php",
+  baseURL: "http://localhost/server.php",
   headers: {
     "Content-type": "multipart/form-data"
   },

@@ -10,7 +10,7 @@ import axios from "axios";
 
 export const axios_form = axios.create({
   //baseURL: "http://s47.ierg4210.ie.cuhk.edu.hk/server.php",
-  baseURL: "http://52.192.59.69/server.php",
+  baseURL: "http://localhost/server.php",
   headers: {
     "Content-type": "multipart/form-data"
   }
@@ -18,7 +18,7 @@ export const axios_form = axios.create({
 
 
 export const secure_axios_form=axios.create({
-  baseURL: "https://secure.s47.ierg4210.ie.cuhk.edu.hk/server.php",
+  baseURL: "https://localhost/server.php",
   headers: {
     "Content-type": "multipart/form-data"
   },

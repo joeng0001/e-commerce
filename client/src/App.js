@@ -46,23 +46,15 @@ function App() {
         return
       }
       var decodedData = JSON.parse(decodeURIComponent(data)); 
-      let favourList=JSON.parse(window.localStorage.getItem("favourList"))
-      let cartList=JSON.parse(window.localStorage.getItem("cartList"))
-
-      favourList=[...new Set(favourList?.concat(JSON.parse(decodedData?.favourList)??[]))]
-      window.localStorage.setItem("favourList",JSON.stringify(favourList))
-
-      JSON.parse(decodedData?.cartList)?.forEach(item=>{
-        let target=cartList.find(item2=>{
-          return item2.PID===item.PID
-        })
-        if(target){
-          target.orderNum=item?.orderNum??1
-        }else{
-          cartList.push(item)
+      Object?.keys(decodedData)?.forEach((key)=>{
+        if(!decodedData[key]){
+          setSearch('')
+          return
         }
-      })
-      window.localStorage.setItem("cartList",JSON.stringify(cartList))
+        //concat 2 array->decodeData and localstorage,use Set to remove duplicate,and convert back to string,save to localstorage
+        JSON.parse(window.localStorage.getItem(key))
+        localStorage.setItem(key, JSON.stringify([...new Set(JSON.parse(decodedData[key])?.concat(JSON.parse(window.localStorage.getItem(key))??[]))]));
+      }) 
       setSearch('')
     }catch{
       setSearch('')
@@ -128,11 +120,11 @@ function App() {
     }
   const redirectToHttps=()=>{
     //pass the localstorage to the https domain,it's string
-    let data={
-      favourList:window.localStorage.getItem("favourList"),
-      cartList:window.localStorage.getItem("cartList")
-    }
-    window.location.replace("https://secure.s47.ierg4210.ie.cuhk.edu.hk"+window.location.pathname+"?data="+encodeURIComponent(JSON.stringify(data)))
+    // let data={
+    //   favourList:window.localStorage.getItem("favourList"),
+    //   cartList:window.localStorage.getItem("cartList")
+    // }
+    // window.location.replace("https://secure.s47.ierg4210.ie.cuhk.edu.hk"+window.location.pathname+"?data="+encodeURIComponent(JSON.stringify(data)))
   }
   const https_path=["/adminTable","/login","/signup","/changePW","/payment"]
     useEffect(()=>{
@@ -140,18 +132,18 @@ function App() {
     },[])
     useEffect(() => {
       //whenever URL change,check whether need to redirect to https
-      if(https_path.find((path)=>{
-        return location.pathname.toLowerCase().includes(path.toLowerCase())
-      })
-      &&
-      (
-        !(window.location.hostname.toLocaleLowerCase().includes('secure'))
-      ||
-      window.location.protocol!=="https:"
-      )
-      ){
-        redirectToHttps()
-      }
+      // if(https_path.find((path)=>{
+      //   return location.pathname.toLowerCase().includes(path.toLowerCase())
+      // })
+      // &&
+      // (
+      //   !(window.location.hostname.toLocaleLowerCase().includes('secure'))
+      // ||
+      // window.location.protocol!=="https:"
+      // )
+      // ){
+      //   redirectToHttps()
+      // }
       //if attempt to access admintable,check redux store isAdmin porperty
       if(location.pathname.toLowerCase().includes('/admintable')&&store.getState().SecurityReducer.isAdmin!==true){
         navigate('/login')

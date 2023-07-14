@@ -111,7 +111,7 @@ export default function ButtonList(props) {
         format_msg+="price "
     if(!(/^\d+$/.test(item.inventory)))
         format_msg+="inventory "
-    if(!(/^[A-Za-z0-9\s]+$/).test(item.name))
+    if(!(/^[A-Za-z]+$/).test(item.name))
         format_msg+="name "
     if(!(/^[A-Za-z]+$/).test(item.ComeFrom))
         format_msg+="comeFrom "
@@ -124,7 +124,6 @@ export default function ButtonList(props) {
     return missing_msg+" "+format_msg+size_msg
   }
   const submitHandler=(data,image)=>{
-    //create item
       //data format =>{CID,subCategory,price,prevPrice,comeForm,inventory,description}
     let item={...data}
     let check_res=checking(item,image)
@@ -168,7 +167,7 @@ export default function ButtonList(props) {
         <Button color="secondary" variant="outlined" onClick={openHistoryOrder}>History order</Button> 
         <Button color="secondary" variant='outlined' onClick={openEditDialog}>Create item</Button>
         <Button color="secondary" variant='outlined' onClick={openEditCateDialog}>Edit Category</Button>
-        <Button color="secondary" variant='contained' onClick={reload}>Click for Hard reload</Button>
+        <Button color="secondary" variant='contained' onClick={reload}>Click for reload</Button>
         <OrderHistory open={orderHistoryOpen} closeDialog={closeHistoryOrder} getAll={true}/>
         <EditDialog item={{}} open={editDialogOpen} closeDialog={closeEditDialog} submitHandler={submitHandler} />
         <EditCateDialog open={editCateDialogOpen} closeDialog={closeEditCateDialog}/>

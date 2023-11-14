@@ -6,7 +6,7 @@
                 throw new Exception("format incorrect");
             }
             $hashed_pw=hashed_pw_generator($_POST['pw']);
-            $db=new PDO('sqlite:../cart.db');
+            $db=new PDO('sqlite:./cart.db');
             $q = $db->query("SELECT userid,is_admin FROM user WHERE email= ? and password = ? and is_active = 1");
             $q->execute([$_POST['email'],$hashed_pw]);
 			$res=$q->fetch(PDO::FETCH_ASSOC);
@@ -31,7 +31,7 @@
                     $http_res->isAdmin=false;
                 }
                 // get the paypal client id
-                $jsonData = file_get_contents('../secret.json');
+                $jsonData = file_get_contents('./secret.json');
                 $data = json_decode($jsonData);
                 $client_id=$data->client_id;
                 $http_res->client_id=$client_id;
@@ -53,7 +53,7 @@
              if(!(email_only($_POST['email'])&&letter_number_underScore_8to20digit_only($_POST['pw']))){
                 throw new Exception("format incorrect");
             }
-            $db=new PDO('sqlite:../cart.db');
+            $db=new PDO('sqlite:./cart.db');
             $q = $db->prepare("insert into user (email,password,is_active,is_admin) values(?,?,?,?)");
             $hashed_password=hashed_pw_generator($_POST['pw']);
             $q->execute([$_POST['email'],$hashed_password,1,0]);
@@ -77,7 +77,7 @@
                 throw new Exception("2 password not match");
             }
             $hashed_pw=hashed_pw_generator($_POST['originPw']);
-            $db=new PDO('sqlite:../cart.db');
+            $db=new PDO('sqlite:./cart.db');
             $q = $db->query("SELECT userid FROM user WHERE email= ? and password = ?");
             $q->execute([$_POST['email'],$hashed_pw]);
 			$res=$q->fetch(PDO::FETCH_ASSOC);

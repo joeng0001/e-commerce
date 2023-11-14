@@ -96,7 +96,7 @@
             }
 
             //obtain the merchant email from secret.json
-            $jsonData = file_get_contents('../secret.json');
+            $jsonData = file_get_contents('./secret.json');
             $data = json_decode($jsonData, true);
             $merchant_email=$data->merchant_email;
 

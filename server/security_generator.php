@@ -38,7 +38,7 @@
 
         //the domain must match the domain of axios,i.e. either 52.192.59.69 || s47.ie.cuhk.edu.hk
         setcookie($cookie_name, $cookie_val, $cookie_exp, 
-        $cookie_path, 'secure.s47.ierg4210.ie.cuhk.edu.hk', true, $cookie_httponly);
+        $cookie_path, 'localhost', true, $cookie_httponly);
 
     }
 

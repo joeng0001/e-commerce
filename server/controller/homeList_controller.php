@@ -1,7 +1,7 @@
 <?php
 	function homeList_getList(){
 		try{	
-			$db=new PDO('sqlite:../cart.db');
+			$db=new PDO('sqlite:./cart.db');
 			$db->query('PRAGMA foreign_keys = ON;');
 			$q=$db->query('select * from listAtHomePage');
 			$rows=$q->fetchAll(PDO::FETCH_ASSOC);

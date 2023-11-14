@@ -8,7 +8,7 @@
                 throw new Exception("Fail to pass checking");
             }
             //nonce checking
-            $db=new PDO('sqlite:../cart.db');
+            $db=new PDO('sqlite:./cart.db');
             $q = $db->query("SELECT nonce FROM user WHERE userid= ?");
             $q->execute([$_POST['userid']]);
 			$db_res=$q->fetch(PDO::FETCH_ASSOC);
@@ -33,7 +33,7 @@
                 throw new Exception("Fail to pass checking");
             }
             //nonce checking
-            $db=new PDO('sqlite:../cart.db');
+            $db=new PDO('sqlite:./cart.db');
             $q = $db->query("SELECT nonce FROM user WHERE userid= ?");
             $q->execute([$_POST['userid']]);
 			$db_res=$q->fetch(PDO::FETCH_ASSOC);

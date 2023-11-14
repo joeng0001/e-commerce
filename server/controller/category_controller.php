@@ -1,7 +1,7 @@
 <?php
 	function category_getList(){
 		try{
-			$db=new PDO('sqlite:../cart.db');
+			$db=new PDO('sqlite:./cart.db');
 			$q=$db->query('select * from categories');
 			$rows=$q->fetchAll(PDO::FETCH_ASSOC);
 			$res=$rows;
@@ -19,7 +19,7 @@
 				{
 					throw new Exception('Format not correct,pls retry');
 				}
-			//$db=new PDO('sqlite:../cart.db');
+			//$db=new PDO('sqlite:./cart.db');
 			$sql = "INSERT INTO categories (NAME, subCategories) VALUES (?,?)";
 			$q= $db->prepare($sql);
 			$q->execute([$_POST['category'],$_POST['subCategory']]);
@@ -38,7 +38,7 @@
 					throw new Exception('Format not correct,pls retry');
 				}
 			$msg="";
-			//$db=new PDO('sqlite:../cart.db');
+			//$db=new PDO('sqlite:./cart.db');
 			$q = $db->query("select subCategories from categories where NAME = ? AND CID = ?");
   			$q->execute([$_POST['category'],$_POST['CID']]);
 			$res=$q->fetch(PDO::FETCH_ASSOC);
@@ -63,7 +63,7 @@
 					throw new Exception('Format not correct,pls retry');
 				}
 			$msg="";
-			//$db=new PDO('sqlite:../cart.db');
+			//$db=new PDO('sqlite:./cart.db');
 			$sql = "UPDATE categories SET NAME = ? WHERE NAME = ? AND CID = ?";
 			$q= $db->prepare($sql);
 			$q->execute([$_POST['newCategory'],$_POST['originCategory'],$_POST['CID']]);
@@ -83,7 +83,7 @@
 					throw new Exception('Format not correct,pls retry');
 				}
 			$msg="";
-			//$db=new PDO('sqlite:../cart.db');
+			//$db=new PDO('sqlite:./cart.db');
 			$sql = "UPDATE categories SET NavListIcon = ? WHERE NAME = ? AND CID = ?";
 			$q= $db->prepare($sql);
 			$q->execute([$_POST['newIcon'],$_POST['category'],$_POST['CID']]);
@@ -103,7 +103,7 @@
 				}
 			$msg="";
 			//update product record that belongs to that subCategory
-			//$db=new PDO('sqlite:../cart.db');
+			//$db=new PDO('sqlite:./cart.db');
 			$sql = "UPDATE products SET subCategory = ? WHERE CID = ? and subcategory = ?";
 			$q= $db->prepare($sql);
 			$q->execute([$_POST['newSubCategory'],$_POST['CID'],$_POST['originSubCategory']]);
@@ -142,7 +142,7 @@
 					throw new Exception('Format not correct,pls retry');
 				}
 			$msg="";
-			//$db=new PDO('sqlite:../cart.db');
+			//$db=new PDO('sqlite:./cart.db');
 			
 			$q=$db->query('select PID from products where CID=? and subCategory = ?');
 			$q->execute([$_POST['CID'],$_POST['subCategory']]);
@@ -195,7 +195,7 @@
 					throw new Exception('Format not correct,pls retry');
 				}
 			$msg="";
-			//$db=new PDO('sqlite:../cart.db');
+			//$db=new PDO('sqlite:./cart.db');
 			
 			$q=$db->query('select PID from products where CID=? ');
 			$q->execute([$_POST['CID']]);

@@ -1,7 +1,7 @@
 <?php
 	function product_getList(){
 		try{
-			$db=new PDO('sqlite:../cart.db');
+			$db=new PDO('sqlite:./cart.db');
 			$db->query('PRAGMA foreign_keys = ON;');
 			$q=$db->query('select * from products');
 			$rows=$q->fetchAll(PDO::FETCH_ASSOC);
@@ -34,7 +34,7 @@
 					throw new Exception('image format not correct!');
 				}
 			}
-			//$db=new PDO('sqlite:../cart.db');
+			//$db=new PDO('sqlite:./cart.db');
 			$sql = "INSERT INTO products (CID,subCategory,name,price,prevPrice,inventory,comeFrom,description) VALUES (?,?,?,?,?,?,?,?)";
 			$q= $db->prepare($sql);
 			$q->execute([$_POST['CID'],$_POST['subCategory'],$_POST['name'],$_POST['price'],$_POST['prevPrice'],$_POST['inventory'],$_POST['comeFrom'],$_POST['description']]);
@@ -74,7 +74,7 @@
 					throw new Exception('image format not correct!');
 				}
 			}
-			//$db=new PDO('sqlite:../cart.db');
+			//$db=new PDO('sqlite:./cart.db');
 			$sql = "UPDATE products SET CID=?,subCategory=?,name=?,price=?,prevPrice=?,comeFrom=?,inventory=?,description=? WHERE PID=?";
 			$q= $db->prepare($sql);
 			$q->execute([$_POST['CID'],$_POST['subCategory'],$_POST['name'],$_POST['price'],$_POST['prevPrice'],$_POST['comeFrom'],$_POST['inventory']
@@ -102,7 +102,7 @@
 				throw new Exception('Format not correct,pls retry');
 			}
 			$msg="";
-			//$db=new PDO('sqlite:../cart.db');
+			//$db=new PDO('sqlite:./cart.db');
 			$sql = "DELETE FROM products where PID = ?";
 			$q= $db->prepare($sql);
 			$q->execute([$_POST['PID']]);

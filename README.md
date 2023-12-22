@@ -7,6 +7,7 @@
     npm start
 
 # server side
+    cd server
     sudo apt-get update
     sudo apt-get install php8.1-pdo-sqlite
     sudo apt-get install php8.1-sqlite3
@@ -16,7 +17,7 @@
     sudo php -S localhost:80
 
 # access
-localhost:3000
+    localhost:3000
 
 # account
     admin:

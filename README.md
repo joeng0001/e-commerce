@@ -1,13 +1,11 @@
 # secret file/function is removed, i.e. PayPal is disabled
 
 # Environment: ubuntu 22.04
-# client side (node v18.17.0,npm v9.6.7)
-    cd client
+# client side (/e-commerce/client) (node v18.17.0,npm v9.6.7)
     npm install --force
     npm start
 
-# server side
-    cd server
+# server side (/e-commerce)
     sudo apt-get update
     sudo apt-get install php8.1-pdo-sqlite
     sudo apt-get install php8.1-sqlite3

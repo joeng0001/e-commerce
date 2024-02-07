@@ -1,6 +1,10 @@
 # secret file/function is removed, i.e. PayPal is disabled
 
 # Environment: ubuntu 22.04
+# Docker
+    docker build -t commerce .
+    docker run -p 80:80 -p 3000:3000 commerce 
+
 # client side (/e-commerce/client) (node v18.17.0,npm v9.6.7)
     npm install --force
     npm start

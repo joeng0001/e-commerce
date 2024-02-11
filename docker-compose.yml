@@ -1,0 +1,11 @@
+services:
+  frontend:
+    build:
+      context: ./client
+    ports:
+      - 3000:3000
+  backend:
+    build:
+      context: .
+    ports:
+      - 80:80

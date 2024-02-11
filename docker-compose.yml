@@ -1,10 +1,10 @@
 services:
-  frontend:
+  client:
     build:
       context: ./client
     ports:
       - 3000:3000
-  backend:
+  server:
     build:
       context: .
     ports:

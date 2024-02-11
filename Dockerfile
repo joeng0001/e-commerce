@@ -1,19 +1,17 @@
-FROM ubuntu:22.04
+FROM php:8.1
 
-ENV DEBIAN_FRONTEND=noninteractive
+WORKDIR /var/www/html
 
-COPY . /app
+COPY . /var/www/html
 
-RUN apt-get update
-RUN apt install -y npm
-RUN apt install -y php
-RUN apt-get install php8.1-pdo-sqlite
-RUN apt-get install php8.1-sqlite3
+RUN apt-get update 
 
-WORKDIR /app/client
-RUN npm install
+RUN apt-get install sqlite3
+
+RUN apt-get install -y libsqlite3-dev 
+
+RUN docker-php-ext-install pdo_sqlite 
 
 EXPOSE 80
-EXPOSE 3000
 
-CMD bash -c 'cd /app/client && npm start' & bash -c 'php -S 0.0.0.0:80'
+CMD ["php", "-S","0.0.0.0:80"]
